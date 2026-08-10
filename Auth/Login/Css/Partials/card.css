@@ -1,0 +1,12 @@
+.container{
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    width: 35em;
+    height: 25em;   
+    background-color: red;
+}
+
+.card-login{
+    
+}
