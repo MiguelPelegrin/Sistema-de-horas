@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <!--Links-->
+
     <link rel="stylesheet" href="/Auth/Login/Css/style.css">
-    <!--Fim links-->
-</head>
+    <script type="module" src="/Auth/Login/Js/script.js"></script>
+    </head>
 
 <body>
     <div class="imgs">
@@ -21,23 +21,20 @@
             <img class="logo" src="/img/Logo/logo cronos escrito.png" alt="">
             <br>
             <form class="formulario">
-                <input type="text" placeholder="User">
-                <input type="password" placeholder="Senha">
+                <input id="user" type="text" placeholder="User">
+                <input id="senha" type="password" placeholder="Senha">
             </form>
             <div class="btn-container">
-                <a href="#">
-                    <button class="btn-login">
-                        <span>Login</span>
-                    </button>
-                </a>
+                <button id="validacao" class="btn-login">
+                    <span>Login</span>
+                </button>
             </div>
             <div class="form-links">
-                <a href="#">Criar cadastro</a>
+                <a href="/Auth/Public/Cadastro.html">Criar cadastro</a>
                 <a href="#">Esqueceu a senha</a>
             </div>
         </div>
     </div>
 
 </body>
-
 </html>
