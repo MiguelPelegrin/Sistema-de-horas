@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro</title>
-    <!--Links-->
-    <link rel="stylesheet" href="../Cadastro/Css/style.css" />
-    <script src="../Cadastro/Js/script.js"></script>
-    <!--Fim links-->
-  </head>
+
+    <link rel="stylesheet" href="../Recsenha/Css/style.css" />
+    <script src="../Recsenha/Js/script.js" defer></script>
+    <script src="../Recsenha/Js/script.js" type="module"></script>
+    </head>
   <body>
     <div class="imgs">
       <img class="img-etec" src="/img/Etec/logo.png" alt="" />
@@ -19,14 +19,12 @@
         <img class="logo" src="/img/Logo/Logo escrito sem fundo.png" alt="" />
         <br/>
         <form class="formulario">
-          <input id="user" type="text" placeholder="Usuario" />
           <input type="email" placeholder="Email" />
-          <input id="senha" type="password" placeholder="Senha" />
-          <input id="senha" type="password" placeholder="Confirmar senha" />
+          <span class="msg">Digite seu email para recuperação de senha</span>
         </form>
         <div class="btn-container">
-          <button id="validacao" class="btn-login">
-            <span>Cadastrar</span>
+          <button id="btn-email" class="btn-login">
+            <span id="btn-texto">mandar email</span>
           </button>
         </div>
         <div class="form-links">

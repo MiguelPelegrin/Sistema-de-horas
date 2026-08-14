@@ -1,1 +1,1 @@
-import './Partials/checklist.js';
+import './Partials/checklist'

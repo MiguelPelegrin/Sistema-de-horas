@@ -1,0 +1,96 @@
+@import url(/Auth/Global/css/global.css);
+:root {
+    --color-card: #152932;
+    --color-text:#ffffff;
+    --color-text-animation:#19e4eb;
+    --color-btn: #1799a0;
+
+}
+
+.container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    width: 45em;
+    height: 38em;   
+    background-color: var(--color-card);
+    border-radius: 10px;
+    margin-top: 4em;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 10em;
+}
+
+.logo {
+    width: 25em;
+    color: var(--color-text-text);
+    display: flex;
+    justify-content: center;
+    margin-top: -4em;
+    margin-left: 5em;
+}
+
+.form-links{
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+.form-links a{
+    text-decoration: none;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 16px;
+    font-family: "Raleway", sans-serif;
+    animation: .2s;
+    cursor: pointer;
+}
+
+.form-links a:hover{
+    color: var(--color-text-animation);
+}
+
+.btn-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 3em;
+}
+
+.btn-login{
+    width: 20em;
+    height: 4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: var(--color-btn);
+    border: none;
+    transition: .2s;
+}
+
+.btn-container :hover{
+    background-color: #19e4eb;
+    color: var(--color-text);
+    border-radius: 10px;
+}
+
+.btn-container a{
+    text-decoration: none;
+}
+
+.btn-container span{
+    font-size: 20px;
+}
+
+
+.btn-login span{
+    color: #ffffff;
+}
+
+.msg{
+    color: var(--color-text);
+    display: flex;
+    justify-content: center;
+}

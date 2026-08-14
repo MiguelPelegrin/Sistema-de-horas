@@ -1,7 +1,7 @@
 .imgs {
     position: absolute;
     top: 20px;
-    margin-top: -5em;
+    margin-top: -6em;
     display: flex;
     align-items: center;
 }
@@ -9,12 +9,11 @@
 .imgs .img-etec {
     max-height: 10em;
     width: auto;
-    margin-top: -1em;
 }
 
 .imgs .img-cps {
     max-height: 20em;
     width: auto;
-    margin-top: -1em;
 }
+
 

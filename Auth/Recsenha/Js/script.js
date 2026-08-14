@@ -1,0 +1,1 @@
+import '../../Recsenha/Js/Partials/timer-btn.js';
