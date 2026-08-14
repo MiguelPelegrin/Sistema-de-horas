@@ -1,4 +1,4 @@
 package com.cronos.cronosystem.model.enums;
 
-public class Turmasep {
+public class Turmasep { // junto, turmaA, turmaB
 }

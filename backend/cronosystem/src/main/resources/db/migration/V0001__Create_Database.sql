@@ -24,7 +24,7 @@ CREATE TABLE prof (
 
 CREATE TABLE horario (
     id INT PRIMARY KEY,
-    dia_semana ENUM("seg", "ter", "qua", "qui", "sex"),
+    dia_semana ENUM("seg", "ter", "qua", "qui", "sex", "sab"),
     tempo_aula INT DEFAULT 50,
     turmasep ENUM('junto', 'turmaA', 'turmaB'),
 );
