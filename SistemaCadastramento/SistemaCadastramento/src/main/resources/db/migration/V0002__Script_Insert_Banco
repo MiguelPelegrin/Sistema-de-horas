@@ -1,0 +1,2 @@
+insert into dados_senhas(usuario, senha, email)
+ values("Miguel", 123, "miguelpelegrin9@gmail.com");

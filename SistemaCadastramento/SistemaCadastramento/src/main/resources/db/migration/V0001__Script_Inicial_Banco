@@ -1,0 +1,10 @@
+create database bd_senhas;
+
+use bd_senhas;
+
+create table dados_senhas(
+	id int auto_increment not null primary key,
+    usuario varchar(45) not null,
+    senha varchar(45) not null,
+    email varchar(100) not null
+);
