@@ -1,1 +1,3 @@
-@import url(./Partials/corpo.css);
+@import url("./Partials/Container.css");
+@import url("./Partials/Format.css");
+@import url("./Partials/Nav.css");
