@@ -1,36 +1,36 @@
 CREATE TABLE materia (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255)
 );
 
 CREATE TABLE usuario (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255),
     email VARCHAR(255),
-    senha VARCHAR(255),
+    senha VARCHAR(255)
 );
 
 CREATE TABLE turma (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255),
-    turno VARCHAR(50),
+    turno VARCHAR(50)
 );
 
 CREATE TABLE prof (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255),
-    carga_horaria_maxima INT,
+    carga_horaria_maxima INT
 );
 
 CREATE TABLE horario (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     dia_semana ENUM("seg", "ter", "qua", "qui", "sex", "sab"),
     tempo_aula INT DEFAULT 50,
-    turmasep ENUM('junto', 'turmaA', 'turmaB'),
+    turmasep ENUM('junto', 'turmaA', 'turmaB')
 );
 
 CREATE TABLE materia_prof (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     id_prof INT,
     id_materia INT,
     FOREIGN KEY (id_prof) REFERENCES prof(id),
@@ -38,7 +38,7 @@ CREATE TABLE materia_prof (
 );
 
 CREATE TABLE grade (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     id_turma INT,
     id_materia_prof INT,
     id_horario INT,
@@ -48,7 +48,7 @@ CREATE TABLE grade (
 );
 
 CREATE TABLE disp_prof (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     id_prof INT,
     id_horario INT,
     FOREIGN KEY (id_prof) REFERENCES prof(id),

@@ -15,10 +15,10 @@ public class DispProf {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name= 'id_prof')
+    @JoinColumn(name = "id_prof")
     private Prof prof;
 
     @ManyToOne
-    @JoinColumn(name = 'id_horario')
+    @JoinColumn(name = "id_horario")
     private Horario horario;
 }

@@ -1,0 +1,9 @@
+package com.cronos.cronosystem.dto;
+
+import com.cronos.cronosystem.model.Usuario;
+
+public record UsuarioResponse(Long id, String nome, String email) {
+    public static UsuarioResponse fromEntity(Usuario usuario) {
+        return new UsuarioResponse(usuario.getId(), usuario.getNome(), usuario.getEmail());
+    }
+}

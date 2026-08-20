@@ -6,7 +6,7 @@
     <title>Cadastro</title>
     <!--Links-->
     <link rel="stylesheet" href="../cadastro/css/style.css" />
-    <script src="../cadastro/js/script.js"></script>
+    <script type="module" src="../cadastro/js/script.js"></script>
     <!--Fim links-->
   </head>
   <body>
@@ -19,11 +19,12 @@
         <img class="logo" src="/img/Logo/Logo escrito sem fundo.png" alt="" />
         <br/>
         <form class="formulario">
-          <input id="user" type="text" placeholder="Usuario" />
-          <input type="email" placeholder="Email" />
+          <input id="nome" type="text" placeholder="Usuario" />
+          <input id="email" type="email" placeholder="Email" />
           <input id="senha" type="password" placeholder="Senha" />
-          <input id="senha" type="password" placeholder="Confirmar senha" />
+          <input id="confirmarSenha" type="password" placeholder="Confirmar senha" />
         </form>
+        <p id="mensagem"></p>
         <div class="btn-container">
           <button id="validacao" class="btn-login">
             <span>Cadastrar</span>

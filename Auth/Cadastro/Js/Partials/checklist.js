@@ -1,20 +1,19 @@
-function validarUser() {
-    const usuario = document.getElementById('user');
+function validarEmail() {
+    const email = document.getElementById('email');
 
-    if (!usuario.value.includes('@') || !usuario.value.includes('.com')) {
-        usuario.style.borderColor = 'red';
-        usuario.style.backgroundColor = '#ffe6e6';
+    if (!email.value.includes('@') || !email.value.includes('.com')) {
+        email.style.borderColor = 'red';
+        email.style.backgroundColor = '#ffe6e6';
         return;
     }
 
-    usuario.style.borderColor = 'green';
-    usuario.style.backgroundColor = '#e6ffe6';
+    email.style.borderColor = 'green';
+    email.style.backgroundColor = '#e6ffe6';
 }
 
 function validarSenha() {
     const password = document.getElementById('senha');
 
-    // Colocar para validar a senha do BD
     if (password.value.length < 6) {
         password.style.borderColor = 'red';
         password.style.backgroundColor = '#ffe6e6';
@@ -29,6 +28,6 @@ const botao = document.getElementById('validacao');
 
 botao.addEventListener('click', (e) => {
     e.preventDefault(); // Evita recarregar a página
-    validarUser();
+    validarEmail();
     validarSenha();
 });
