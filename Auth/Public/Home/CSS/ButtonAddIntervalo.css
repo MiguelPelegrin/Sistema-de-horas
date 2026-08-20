@@ -1,5 +1,7 @@
 .buttonAddIntervalo{
-    margin-top: 1rem;
     padding: 10px;
-    background-color: white;
+    background-color: #A3130D;
+    color: white;
+    border: 0;
+    margin-top: 1rem;
 }
