@@ -1,5 +1,9 @@
 package com.cronos.cronosystem.controller;
 
+import com.cronos.cronosystem.dto.AlterarSenhaDto;
+import com.cronos.cronosystem.dto.UsuarioCadastroDto;
+import com.cronos.cronosystem.dto.UsuarioDto;
+import com.cronos.cronosystem.dto.UsuarioPublicoDto;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import com.cronos.cronosystem.service.UsuarioService;
@@ -12,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -27,18 +32,18 @@ public class UsuarioController {
     @GetMapping
     public List<Usuario> listar(){return repository.findAll();}
     @GetMapping("/pornome")
-    public Page<UserDto> listarPorNome(UserFilter userFilter, Pageable pageable){
+    public Page<UsuarioDto> listarPorNome(UsuarioFilter userFilter, Pageable pageable){
         return repository.filtrar(userFilter, pageable);
     }
 
     @GetMapping("/me")
-    public User buscarLogado(@AuthenticationPrincipal User usuarioLogado){
+    public Usuario buscarLogado(@AuthenticationPrincipal Usuario usuarioLogado){
         return usuarioLogado;
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> buscar(@PathVariable Long userId, @AuthenticationPrincipal User usuarioLogado){
-        User usuario = service.buscaroufalhar(userId);
+    public ResponseEntity<Object> buscar(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado){
+        Usuario usuario = service.buscaroufalhar(userId);
 
         boolean ehDono = usuarioLogado != null && userId.equals(usuarioLogado.getId());
         boolean ehAdmin = usuarioLogado != null && Boolean.TRUE.equals(usuarioLogado.getAdmin());
@@ -46,31 +51,30 @@ public class UsuarioController {
         if (ehDono || ehAdmin) {
             return ResponseEntity.ok(usuario);
         }
-        return ResponseEntity.ok(new UserPublicoDto(usuario.getId(), usuario.getUser(), usuario.getDescr()));
+        return ResponseEntity.ok(new UsuarioPublicoDto(usuario.getId(), usuario.getNome()));
     }
 
     @PostMapping
-    public User adicionar(@RequestBody @Valid UserCadastroDto dados) { return service.cadastrar(dados); }
+    public Usuario adicionar(@RequestBody @Valid UsuarioCadastroDto dados) { return service.cadastrar(dados); }
 
     @DeleteMapping("/{userId}")
-    public void remover(@PathVariable Long userId, @AuthenticationPrincipal User usuarioLogado){
+    public void remover(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado) {
         service.validarDono(userId, usuarioLogado);
         service.excluir(userId);
     }
 
     @PutMapping("/{userId}")
-    public User alterar(@PathVariable Long userId, @RequestBody User user, @AuthenticationPrincipal User usuarioLogado){
+    public Usuario alterar(@PathVariable Long userId, @RequestBody Usuario user, @AuthenticationPrincipal Usuario usuarioLogado){
         service.validarDono(userId, usuarioLogado);
 
-        User userAtual = service.buscaroufalhar(userId);
+        Usuario userAtual = service.buscaroufalhar(userId);
         BeanUtils.copyProperties(user, userAtual, "id", "senha", "plano", "admin");
         return service.salvar(userAtual);
     }
 
     @PutMapping("/{userId}/senha")
-    public User alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal User usuarioLogado){
+    public Usuario alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal Usuario usuarioLogado){
         service.validarDono(userId, usuarioLogado);
         return service.alterarSenha(userId, dados);
     }
-
 }
