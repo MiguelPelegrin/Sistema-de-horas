@@ -1,4 +1,4 @@
-package com.cronos.cronosystem.model;
+package com.cronos.cronosystem.dto;
 
 import com.cronos.cronosystem.model.enums.Turno;
 import jakarta.persistence.*;
@@ -7,19 +7,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "turma")
-public class Turma {
-    @Id
-    @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TurmaDto {
+
     private Long id;
 
-    @NotNull
     private String nome;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "turno")
-    private Turno turno;
+    private String turno;
 }

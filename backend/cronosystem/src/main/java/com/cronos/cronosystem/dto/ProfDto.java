@@ -1,4 +1,4 @@
-package com.cronos.cronosystem.model;
+package com.cronos.cronosystem.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,18 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "prof")
-public class Prof {
-    @Id
-    @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProfDto {
+
     private Long id;
 
-    @NotNull
     private String nome;
 
-    @Column(name = "carga_horaria_maxima")
-    private Integer chm; // Carga Horaria Maxima
+    private String chm; // Carga Horaria Maxima
 }

@@ -1,4 +1,4 @@
-package com.cronos.cronosystem.model;
+package com.cronos.cronosystem.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,21 +6,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "usuario")
-public class Usuario {
-    @Id
-    @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UsuarioDto {
+
     private Long id;
 
-    @NotNull
     private String nome;
 
-    @NotNull
     private String email;
 
-    @NotNull
-    private  String senha;
+    private String senha;
 }

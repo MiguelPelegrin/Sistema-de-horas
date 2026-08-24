@@ -1,24 +1,10 @@
 package com.cronos.cronosystem.repository;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@Data
-@Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "materia_prof")
-public class MateriaProf {
-    @Id
-    @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+import com.cronos.cronosystem.model.DispProf;
+import com.cronos.cronosystem.model.MateriaProf;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    @ManyToOne
-    @JoinColumn(name = "id_prof")
-    private Prof prof;
+public interface MateriaProfDto extends JpaRepository<MateriaProf, Long> {
 
-    @ManyToOne
-    @JoinColumn(name = "id_materia")
-    private Materia materia;
 }

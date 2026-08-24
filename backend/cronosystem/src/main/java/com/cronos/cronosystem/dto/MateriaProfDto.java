@@ -1,24 +1,15 @@
-package com.cronos.cronosystem.model;
+package com.cronos.cronosystem.dto;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "materia_prof")
-public class MateriaProf {
-    @Id
-    @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class MateriaProfDto {
+
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_prof")
-    private Prof prof;
+    private String prof;
 
-    @ManyToOne
-    @JoinColumn(name = "id_materia")
-    private Materia materia;
+    private String materia;
 }
