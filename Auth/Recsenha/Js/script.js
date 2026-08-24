@@ -1,1 +1,1 @@
-import '../../recsenha/js/partials/timer-btn.js';
+import './Partials/timer-btn.js';

@@ -16,5 +16,5 @@ public class Materia {
     private Long id;
 
     @NotNull
-    private String name;
+    private String nome;
 }
