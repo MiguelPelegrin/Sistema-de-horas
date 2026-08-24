@@ -4,9 +4,11 @@ import com.cronos.cronosystem.model.enums.DiaSemana;
 import com.cronos.cronosystem.model.enums.Turmasep;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 @Data
+@AllArgsConstructor
 public class HorarioDto {
 
     private Long id;
