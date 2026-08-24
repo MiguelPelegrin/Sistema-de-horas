@@ -8,6 +8,7 @@ CREATE TABLE usuario (
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     senha VARCHAR(255) NOT NULL
+    admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE turma (

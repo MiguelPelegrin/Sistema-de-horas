@@ -5,6 +5,6 @@ import com.cronos.cronosystem.model.DispProf;
 import com.cronos.cronosystem.model.Turma;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TurmaDto extends JpaRepository<Turma, Long> {
+public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
 }

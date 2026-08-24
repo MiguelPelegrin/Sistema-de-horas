@@ -5,6 +5,6 @@ import com.cronos.cronosystem.model.DispProf;
 import com.cronos.cronosystem.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsuarioDto extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 }
