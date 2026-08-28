@@ -5,127 +5,120 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../Home/CSS/Style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Visão geral</title>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#"><h1>CRONOS SYSTEM</h1></a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link  active" aria-current="page" href="./Home.html"><strong>Home</strong></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./professores.html"><strong>Professores</strong></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./Turmas.html"><strong>Turmas</strong></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./disciplinas.html"><strong>Disciplinas</strong></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-disabled="true"><strong>Planilhas</strong></a>
-              </li>
-            </ul>
-          </div>
+  <nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">CRONOS SYSTEM</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">CRONOS SYSTEM</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-      </nav>
-
-      <div class="container">
-
-        <h2>Identificação</h2>
-        <p>Aparece no cabeçalho de todas as tabelas do Excel</p>
-
-        <div class="d-flex">
-          <div>
-            <p>Nome da Escola</p>
-            <input style="width: 100%;" type="text">
-          </div>
-
-          <div class="d2">
-            <p>Ano Letivo</p>
-            <input style="width: 80%;" type="text">
-          </div>
-        </div>
-
-        <p style="margin-top: 1rem;">Turno</p>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Selecionar
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Manhã</a></li>
-            <li><a class="dropdown-item" href="#">Tarde</a></li>
-            <li><a class="dropdown-item" href="#">Noite</a></li>
-            <li><a class="dropdown-item" href="#">Integral</a></li>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./Home.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./professores.html">Professores</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./Turmas.html">Turmas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Disciplinas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./Planilhas.html">Planilhas</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Adicionar
+              </a>
+              <ul id="navbar-add" class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="#">Professor</a></li>
+                <li><a class="dropdown-item" href="#">Turma</a></li>
+                <li><a class="dropdown-item" href="./addDisciplinas.html">Diciplina</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+              </ul>
+              <li id="exit-event">
+                <a class="dropdown-item" href="#"> <i id="exit" class="bi bi-box-arrow-left"></i> sair</a>
+              </li>
+            </li>
           </ul>
         </div>
-
       </div>
+    </div>
+  </nav>
 
-      <div class="container">
+    <main class="page">
+        <div class="visao-geral">
+            <div>
+                <h1>Visão geral</h1>
+                <p>Cadastre os dados essenciais e monte a grade escolar sem informações desnecessárias.</p>
+            </div>
+            <div class="actions">
+              <a class="btn btn-outline" href="Disponibilidade.html">Disponibilidade</a>
+              <a class="btn btn-primary" href="Horarios.html">Montar horário</a>
+            </div>
+        </div>
         
-        <h2>Dias Letivos</h2>
-        <p>Marque em que dias haverá aula</p>
-
-        <button id="ButtonSemana" class="ButtonSemana">Segunda</button> <button id="ButtonSemana" class="ButtonSemana">Terça</button> <button id="ButtonSemana" class="ButtonSemana">Quarta</button> <button id="ButtonSemana" class="ButtonSemana">Quinta</button> <button id="ButtonSemana" class="ButtonSemana">Sexta</button> <button id="ButtonSemana" class="ButtonSemana">Sábado</button>
-
-      </div>
-
-      <div class="container">
-        
-        <h2>Duração das Aulas</h2>
-        <p>Defina o tempo de duração das aulas</p>
-
-        <div class="d-flex">
-          <div>
-            <p>Início do Turno</p>
-            <input style="width: 100%;" type="text">
-          </div>
-
-          <div class="d2">
-            <p>Duração da Aula (min)</p>
-            <input style="width: 80%;" type="text">
-          </div>
+        <div class="stats">
+            <div class="stat"><small>Professores</small><strong id="statProf">0</strong></div>
+            <div class="stat"><small>Disciplinas</small><strong id="statDisc">0</strong></div>
+            <div class="stat"><small>Turmas</small><strong id="statTurma">0</strong></div>
+            <div class="stat"><small>Aulas cadastradas</small><strong id="statHor">0</strong></div>
         </div>
 
-        <p style="margin-top: 1rem;">Duração da Aula (min)</p>
-        <input style="width: 20%;" type="text">
-
-      </div>
-
-      <div class="container">
-        
-        <h2>Intervalo</h2>
-        <p>Defina a quantidade e duração do(s) intevalo(s)</p>
-
-        <div class="d-flex">
-          <div>
-            <p>Depois da aula n°</p>
-            <input style="width: 100%;" type="text">
-          </div>
-
-          <div class="d2">
-            <p>Duração (min)</p>
-            <input style="width: 80%;" type="text">
-          </div>
+        <div class="grid grid-2">
+            <section class="card">
+                <div class="section-title">
+                    <div>
+                        <h2>Dados da escola</h2>
+                        <p class="sub">Apenas o que aparece no cabeçalho da grade.</p>
+                    </div><button class="btn btn-primary">Salvar</button>
+                </div>
+                <div class="grid grid-2">
+                    <div class="field"><label for="school">Escola</label><input id="school"
+                            placeholder="ETEC Cidade do Livro"></div>
+                    <div class="field"><label for="semester">Semestre</label><input id="semester"
+                            placeholder="2º Semestre de 2026"></div>
+                    <div class="field"><label for="shift">Turno principal</label><select id="shift">
+                            <option>Diurno</option>
+                            <option>Noturno</option>
+                            <option>Integral</option>
+                        </select></div>
+                    <div class="field"><label for="coordination">Coordenação</label><input id="coordination"
+                            placeholder="Responsável"></div>
+                </div>
+            </section>
+            <section class="card">
+                <div class="section-title">
+                    <div>
+                        <h2>Dias letivos</h2>
+                        <p class="sub">Selecione os dias utilizados na grade.</p>
+                    </div>
+                </div>
+                <div class="pills"><button class="pill day-pill" data-day="Segunda">Segunda</button><button
+                        class="pill day-pill" data-day="Terça">Terça</button><button class="pill day-pill"
+                        data-day="Quarta">Quarta</button><button class="pill day-pill"
+                        data-day="Quinta">Quinta</button><button class="pill day-pill" data-day="Sexta">Sexta</button>
+                </div>
+                <div class="note" style="margin-top:14px">Os horários da grade usam os blocos de aula e intervalo do
+                    padrão da planilha. A disponibilidade usa os horários oficiais por período.</div>
+            </section>
         </div>
-
-        <p style="margin-top: 1rem;">Nome</p>
-        <input style="width: 20%;" type="text">
-
-        <br>
-
-        <button class="buttonAddIntervalo">Adicionar Intervalo</button>
-
-      </div>
+    </main>
 
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
       <script src="../Home/JS/ButtonSemana.js"></script>

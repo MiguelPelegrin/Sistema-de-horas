@@ -1,0 +1,20 @@
+.page{
+    margin-top: 8em;
+}
+.visao-geral {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 18px
+}
+
+.visao-geral h1 {
+    margin: 0;
+    font-size: 1.85rem
+}
+
+.visao-geral p {
+    margin: 5px 0 0;
+    color: var(--muted)
+}

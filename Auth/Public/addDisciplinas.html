@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="../disciplinas/css/Style.css" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+ 
+    <title>Diciplinas</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">CRONOS SYSTEM</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">CRONOS SYSTEM</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="./Home.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./professores.html">Professores</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./Turmas.html">Turmas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Disciplinas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./Planilhas.html">Planilhas</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Adicionar
+                </a>
+                <ul id="navbar-add" class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="#">Professor</a></li>
+                  <li><a class="dropdown-item" href="#">Turma</a></li>
+                  <li><a class="dropdown-item" href="./addDisciplinas.html">Diciplina</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                </ul>
+                <li id="exit-event">
+                  <a class="dropdown-item" href="#"> <i id="exit" class="bi bi-box-arrow-left"></i> sair</a>
+                </li>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Adicionar diciplina</h2>
+
+          <p class="sub">
+            Diciplinas que serão adicionadas ou removidas do sistema.
+          </p>
+        </div>
+        <button onclick="addDiciplina()" class="btn btn-primary">Salvar</button>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="field">
+          <label for="school">Diciplina</label>
+          <input id="school" placeholder="Ex: matemática" />
+        </div>
+
+        <div class="field">
+          <label for="temPrioridade">Prioridade (Ex: laboratorio)</label>
+          <select id="temPrioridade">
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="shift">Cor de Identificação</label>
+          <select id="shift">
+            <option>Azul</option>
+            <option>Rosa</option>
+            <option>Amarelo</option>
+            <option>Verde</option>
+            <option>Vermelho</option>
+            <option>Roxo</option>
+            <option>Laranja</option>
+            <option>Cinza</option>
+            <option>Ciano</option>
+            <option>Marrom</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="qualPrioridade">Qual a Prioridade</label>
+          <select id="qualPrioridade">
+            <option value="Sem prioridade">Sem prioridade</option>
+            <option value="LAB 1 química">LAB 1 química</option>
+            <option value="LAB 2 química">LAB 2 química</option>
+            <option value="LAB 1 informática">LAB 1 informática</option>
+            <option value="LAB 2 informática">LAB 2 informática</option>
+            <option value="LAB 3 informática">LAB 3 informática</option>
+            <option value="LAB 4 informática">LAB 4 informática</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <div id="lista-disciplinas" class="container mt-4"></div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!--resolver o problema de import do js depois-->
+    <script>
+      // Mapeamento das cores do formulário para o CSS
+      const mapaCores = {
+        Azul: { bg: "#0d6efd", text: "#ffffff" },
+        Rosa: { bg: "#d63384", text: "#ffffff" },
+        Amarelo: { bg: "#ffc107", text: "#000000" }, // Texto escuro para melhor leitura
+        Verde: { bg: "#198754", text: "#ffffff" },
+        Vermelho: { bg: "#dc3545", text: "#ffffff" },
+        Roxo: { bg: "#6f42c1", text: "#ffffff" },
+        Laranja: { bg: "#fd7e14", text: "#ffffff" },
+        Cinza: { bg: "#6c757d", text: "#ffffff" },
+        Ciano: { bg: "#0dcaf0", text: "#000000" }, // Texto escuro
+        Marrom: { bg: "#795548", text: "#ffffff" },
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const selectTemPrioridade = document.getElementById("temPrioridade");
+        const selectQualPrioridade = document.getElementById("qualPrioridade");
+
+        function atualizarEstadoPrioridade() {
+          if (selectTemPrioridade.value === "Não") {
+            selectQualPrioridade.value = "Sem prioridade";
+            selectQualPrioridade.disabled = true;
+          } else {
+            selectQualPrioridade.disabled = false;
+          }
+        }
+
+        selectTemPrioridade.addEventListener(
+          "change",
+          atualizarEstadoPrioridade
+        );
+        atualizarEstadoPrioridade();
+      });
+
+      function addDiciplina() {
+        const inputNome = document.getElementById("school");
+        const selectTemPrioridade = document.getElementById("temPrioridade");
+        const selectCor = document.getElementById("shift");
+        const selectQualPrioridade = document.getElementById("qualPrioridade");
+        const listaContainer = document.getElementById("lista-disciplinas");
+
+        const disciplina = inputNome.value.trim();
+        const temPrioridade = selectTemPrioridade.value;
+        const corNome = selectCor.value;
+        const qualPrioridade = selectQualPrioridade.disabled
+          ? "Sem prioridade"
+          : selectQualPrioridade.value;
+
+        if (disciplina === "") {
+          alert("Por favor, digite o nome da disciplina!");
+          return;
+        }
+
+        // Busca as configurações de cor no mapa (ou usa cinza por padrão)
+        const estiloCor = mapaCores[corNome] || {
+          bg: "#6c757d",
+          text: "#ffffff",
+        };
+
+        const novoCard = document.createElement("div");
+        novoCard.className = "card card-disciplina-custom shadow-sm p-3 mb-2";
+
+        // A tag da cor agora recebe background-color e color dinâmicos
+        novoCard.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="info-linha">
+              <h5 class="mb-0 text-primary fw-bold me-2">${disciplina}</h5>
+              <span class="info-item"><strong>Prioridade:</strong> ${temPrioridade}</span>
+              <span class="info-item">
+                <strong>Cor:</strong> 
+                <span class="badge-cor" style="background-color: ${estiloCor.bg}; color: ${estiloCor.text};">
+                  ${corNome}
+                </span>
+              </span>
+              <span class="info-item"><strong>Qual:</strong> ${qualPrioridade}</span>
+            </div>
+            <button class="btn btn-outline-danger btn-sm" onclick="removerCard(this, '${disciplina}')">Apagar</button>
+          </div>
+        `;
+
+        listaContainer.appendChild(novoCard);
+
+        // Reseta o formulário
+        inputNome.value = "";
+        selectTemPrioridade.value = "Sim";
+        selectQualPrioridade.disabled = false;
+        selectQualPrioridade.selectedIndex = 0;
+      }
+
+      function removerCard(botao, nomeDisciplina) {
+        if (
+          confirm(`Deseja realmente apagar a disciplina "${nomeDisciplina}"?`)
+        ) {
+          const card = botao.closest(".card-disciplina-custom");
+          if (card) card.remove();
+        }
+      }
+    </script>
+  </body>
+</html>
