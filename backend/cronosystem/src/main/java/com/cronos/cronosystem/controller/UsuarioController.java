@@ -4,6 +4,7 @@ import com.cronos.cronosystem.dto.AlterarSenhaDto;
 import com.cronos.cronosystem.dto.UsuarioCadastroDto;
 import com.cronos.cronosystem.dto.UsuarioDto;
 import com.cronos.cronosystem.dto.UsuarioPublicoDto;
+import com.cronos.cronosystem.filter.UsuarioFilter;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import com.cronos.cronosystem.service.UsuarioService;
