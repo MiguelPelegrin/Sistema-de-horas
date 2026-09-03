@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -30,10 +31,11 @@ public class UsuarioController {
     private UsuarioService service;
 
     @GetMapping
-    public List<Usuario> listar(){return repository.findAll();}
+    public List<Usuario> listar(){ return repository.findAll(); }
+
     @GetMapping("/pornome")
-    public Page<UsuarioDto> listarPorNome(UsuarioFilter userFilter, Pageable pageable){
-        return repository.filtrar(userFilter, pageable);
+    public Page<UsuarioDto> listarPorNome(UsuarioFilter filter, Pageable pageable){
+        return repository.filtrar(filter, pageable);
     }
 
     @GetMapping("/me")
@@ -58,13 +60,13 @@ public class UsuarioController {
     public Usuario adicionar(@RequestBody @Valid UsuarioCadastroDto dados) { return service.cadastrar(dados); }
 
     @DeleteMapping("/{userId}")
-    public void remover(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado) {
+    public void remover(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
         service.validarDono(userId, usuarioLogado);
         service.excluir(userId);
     }
 
     @PutMapping("/{userId}")
-    public Usuario alterar(@PathVariable Long userId, @RequestBody Usuario user, @AuthenticationPrincipal Usuario usuarioLogado){
+    public Usuario alterar(@PathVariable Long userId, @RequestBody Usuario user, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
         service.validarDono(userId, usuarioLogado);
 
         Usuario userAtual = service.buscaroufalhar(userId);
@@ -73,7 +75,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{userId}/senha")
-    public Usuario alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal Usuario usuarioLogado){
+    public Usuario alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
         service.validarDono(userId, usuarioLogado);
         return service.alterarSenha(userId, dados);
     }

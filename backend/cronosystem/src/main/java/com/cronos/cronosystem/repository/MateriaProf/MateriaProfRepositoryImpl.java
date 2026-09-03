@@ -72,8 +72,8 @@ public class MateriaProfRepositoryImpl implements MateriaProfRepositoryQuery {
     private Predicate[] criarRestricoes(MateriaProfFilter filter, CriteriaBuilder builder, Root<MateriaProf> root) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if(!StringUtils.isEmpty(filter.getNome())) {
-            predicates.add(builder.like(builder.lower(root.get("nome")), "%" + filter.getNome().toLowerCase()));
+        if(!StringUtils.isEmpty(filter.getMateria())) {
+            predicates.add(builder.like(builder.lower(root.get("nome")), "%" + filter.getMateria().toLowerCase()));
         }
 
         return predicates.toArray(new Predicate[predicates.size()]);

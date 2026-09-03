@@ -55,7 +55,7 @@ public class UsuarioService {
     @Transactional
     public void excluir(Long userId){ repository.deleteById(userId);}
 
-    public void validarDono(Long userId, Usuario usuarioLogado) { // Se erro tirar throws AccessDeniedException
+    public void validarDono(Long userId, Usuario usuarioLogado) throws AccessDeniedException { // Se erro tirar throws AccessDeniedException
         boolean ehDono = userId.equals(usuarioLogado.getId());
         boolean ehAdmin = Boolean.TRUE.equals(usuarioLogado.getAdmin());
 
