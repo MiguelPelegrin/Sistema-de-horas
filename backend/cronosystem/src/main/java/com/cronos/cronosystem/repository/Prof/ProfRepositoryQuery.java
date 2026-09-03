@@ -1,7 +1,7 @@
-package com.cronos.cronosystem.repository.query;
+package com.cronos.cronosystem.repository.Prof;
 
 import com.cronos.cronosystem.dto.ProfDto;
-import com.cronos.cronosystem.filter.ProfFilter;
+import com.cronos.cronosystem.repository.filter.ProfFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

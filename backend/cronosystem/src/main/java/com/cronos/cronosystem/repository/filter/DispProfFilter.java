@@ -1,4 +1,4 @@
-package com.cronos.cronosystem.filter;
+package com.cronos.cronosystem.repository.filter;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

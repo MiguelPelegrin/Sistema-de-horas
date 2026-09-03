@@ -4,7 +4,7 @@ import com.cronos.cronosystem.dto.AlterarSenhaDto;
 import com.cronos.cronosystem.dto.UsuarioCadastroDto;
 import com.cronos.cronosystem.dto.UsuarioDto;
 import com.cronos.cronosystem.dto.UsuarioPublicoDto;
-import com.cronos.cronosystem.filter.UsuarioFilter;
+import com.cronos.cronosystem.repository.filter.UsuarioFilter;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import com.cronos.cronosystem.service.UsuarioService;
@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController

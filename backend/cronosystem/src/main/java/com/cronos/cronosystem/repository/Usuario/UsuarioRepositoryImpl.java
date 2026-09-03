@@ -1,9 +1,8 @@
-package com.cronos.cronosystem.repository.Impl;
+package com.cronos.cronosystem.repository.Usuario;
 
-import com.cronos.cronosystem.dto.ProfDto;
-import com.cronos.cronosystem.filter.ProfFilter;
-import com.cronos.cronosystem.model.Prof;
-import com.cronos.cronosystem.repository.query.ProfRepositoryQuery;
+import com.cronos.cronosystem.dto.UsuarioDto;
+import com.cronos.cronosystem.repository.filter.UsuarioFilter;
+import com.cronos.cronosystem.model.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -19,21 +18,22 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfRepositoryImpl implements ProfRepositoryQuery {
+public class UsuarioRepositoryImpl implements UsuarioRepositoryQuery {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public Page<ProfDto> filtrar(ProfFilter filter, Pageable pageable) {
+    public Page<UsuarioDto> filtrar(UsuarioFilter filter, Pageable pageable) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<ProfDto> criteria = builder.createQuery(ProfDto.class);
-        Root<Prof> root = criteria.from(Prof.class);
+        CriteriaQuery<UsuarioDto> criteria = builder.createQuery(UsuarioDto.class);
+        Root<Usuario> root = criteria.from(Usuario.class);
 
-        criteria.select(builder.construct(ProfDto.class,
+        criteria.select(builder.construct(UsuarioDto.class,
                 root.get("id"),
                 root.get("nome"),
-                root.get("chm")
+                root.get("email"),
+                root.get("senha")
         ));
 
         Predicate[] predicates = criarRestricoes(filter, builder, root);
@@ -41,16 +41,16 @@ public class ProfRepositoryImpl implements ProfRepositoryQuery {
         criteria.where(predicates);
         criteria.orderBy(builder.asc(root.get("nome")));
 
-        TypedQuery<ProfDto> query = manager.createQuery(criteria);
+        TypedQuery<UsuarioDto> query = manager.createQuery(criteria);
         addRestPag(query, pageable);
 
         return new PageImpl<>(query.getResultList(), pageable, total(filter));
     }
 
-    private Long total(ProfFilter filter) {
+    private Long total(UsuarioFilter filter) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-        Root<Prof> root = criteria.from(Prof.class);
+        Root<Usuario> root = criteria.from(Usuario.class);
 
         Predicate[] predicates = criarRestricoes(filter, builder, root);
         criteria.where(predicates);
@@ -60,7 +60,7 @@ public class ProfRepositoryImpl implements ProfRepositoryQuery {
         return manager.createQuery(criteria).getSingleResult();
     }
 
-    private void addRestPag(TypedQuery<ProfDto> query, Pageable pageable) {
+    private void addRestPag(TypedQuery<UsuarioDto> query, Pageable pageable) {
         int pagAtual = pageable.getPageNumber();
         int totalRegPorPag = pageable.getPageSize();
         int primRegPag = pagAtual * totalRegPorPag;
@@ -70,7 +70,7 @@ public class ProfRepositoryImpl implements ProfRepositoryQuery {
 
     }
 
-    private Predicate[] criarRestricoes(ProfFilter filter, CriteriaBuilder builder, Root<Prof> root) {
+    private Predicate[] criarRestricoes(UsuarioFilter filter, CriteriaBuilder builder, Root<Usuario> root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if(!StringUtils.isEmpty(filter.getNome())) {

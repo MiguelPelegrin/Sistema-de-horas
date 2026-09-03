@@ -1,9 +1,8 @@
-package com.cronos.cronosystem.repository.Impl;
+package com.cronos.cronosystem.repository.MateriaProf;
 
-import com.cronos.cronosystem.dto.TurmaDto;
-import com.cronos.cronosystem.filter.TurmaFilter;
-import com.cronos.cronosystem.model.Turma;
-import com.cronos.cronosystem.repository.query.TurmaRepositoryQuery;
+import com.cronos.cronosystem.dto.MateriaProfDto;
+import com.cronos.cronosystem.repository.filter.MateriaProfFilter;
+import com.cronos.cronosystem.model.MateriaProf;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -19,20 +18,21 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TurmaRepositoryImpl implements TurmaRepositoryQuery {
+public class MateriaProfRepositoryImpl implements MateriaProfRepositoryQuery {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public Page<TurmaDto> filtrar(TurmaFilter filter, Pageable pageable) {
+    public Page<MateriaProfDto> filtrar(MateriaProfFilter filter, Pageable pageable) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<TurmaDto> criteria = builder.createQuery(TurmaDto.class);
-        Root<Turma> root = criteria.from(Turma.class);
+        CriteriaQuery<MateriaProfDto> criteria = builder.createQuery(MateriaProfDto.class);
+        Root<MateriaProf> root = criteria.from(MateriaProf.class);
 
-        criteria.select(builder.construct(TurmaDto.class,
+        criteria.select(builder.construct(MateriaProfDto.class,
                 root.get("id"),
-                root.get("nome")
+                root.get("nome"),
+                root.get("chm")
         ));
 
         Predicate[] predicates = criarRestricoes(filter, builder, root);
@@ -40,16 +40,16 @@ public class TurmaRepositoryImpl implements TurmaRepositoryQuery {
         criteria.where(predicates);
         criteria.orderBy(builder.asc(root.get("nome")));
 
-        TypedQuery<TurmaDto> query = manager.createQuery(criteria);
+        TypedQuery<MateriaProfDto> query = manager.createQuery(criteria);
         addRestPag(query, pageable);
 
         return new PageImpl<>(query.getResultList(), pageable, total(filter));
     }
 
-    private Long total(TurmaFilter filter) {
+    private Long total(MateriaProfFilter filter) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-        Root<Turma> root = criteria.from(Turma.class);
+        Root<MateriaProf> root = criteria.from(MateriaProf.class);
 
         Predicate[] predicates = criarRestricoes(filter, builder, root);
         criteria.where(predicates);
@@ -59,7 +59,7 @@ public class TurmaRepositoryImpl implements TurmaRepositoryQuery {
         return manager.createQuery(criteria).getSingleResult();
     }
 
-    private void addRestPag(TypedQuery<TurmaDto> query, Pageable pageable) {
+    private void addRestPag(TypedQuery<MateriaProfDto> query, Pageable pageable) {
         int pagAtual = pageable.getPageNumber();
         int totalRegPorPag = pageable.getPageSize();
         int primRegPag = pagAtual * totalRegPorPag;
@@ -69,7 +69,7 @@ public class TurmaRepositoryImpl implements TurmaRepositoryQuery {
 
     }
 
-    private Predicate[] criarRestricoes(TurmaFilter filter, CriteriaBuilder builder, Root<Turma> root) {
+    private Predicate[] criarRestricoes(MateriaProfFilter filter, CriteriaBuilder builder, Root<MateriaProf> root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if(!StringUtils.isEmpty(filter.getNome())) {
@@ -80,3 +80,4 @@ public class TurmaRepositoryImpl implements TurmaRepositoryQuery {
 
     }
 }
+

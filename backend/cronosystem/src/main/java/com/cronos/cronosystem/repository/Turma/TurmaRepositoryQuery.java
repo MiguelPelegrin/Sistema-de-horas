@@ -1,8 +1,8 @@
-package com.cronos.cronosystem.repository.query;
+package com.cronos.cronosystem.repository.Turma;
 
 
 import com.cronos.cronosystem.dto.TurmaDto;
-import com.cronos.cronosystem.filter.TurmaFilter;
+import com.cronos.cronosystem.repository.filter.TurmaFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
