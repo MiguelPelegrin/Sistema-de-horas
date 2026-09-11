@@ -1,3 +1,26 @@
-nav{
-    background-color: #A3130D;
+.img-logo{
+    width: 180px;
+    
 }
+
+#exit{
+    font-size: 20px;
+    padding: 10px;
+    margin-left: -20px;
+}
+
+#exit-event {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: .2s;
+    cursor: pointer;
+}
+
+#exit {
+    font-size: 20px;
+}
+
+

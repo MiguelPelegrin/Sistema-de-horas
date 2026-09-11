@@ -1,0 +1,13 @@
+:root {
+    --cor-vermelho: #a3130d;
+    --cor-vermelho-escuro: #7d0d09;
+    --cor-azul-escuro: #071568;
+    --cor-azul-claro: #d7e5f2;
+    --cor-fundo-pagina: #f4f6f9;
+    --cor-fundo-card: #ffffff;
+    --cor-texto: #1e2733;
+    --cor-texto-suave: #6d7580;
+    --cor-borda: #dce1e7;
+    --sombra-card: 0 8px 22px rgba(12, 24, 52, 0.07);
+    --borda-arredondada: 14px;
+}

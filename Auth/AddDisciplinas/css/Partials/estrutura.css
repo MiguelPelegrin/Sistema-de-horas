@@ -1,0 +1,166 @@
+@import url(./variaveis.css);
+
+/* =========================================
+   CONFIGURAÇÕES GERAIS E BARRA DE ROLAGEM
+========================================= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2); 
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+/* =========================================
+   NAVBAR E MENU LATERAL (OFFCANVAS)
+========================================= */
+.barra-aplicativo-topo {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--cor-fundo-cartao);
+  border-bottom: 1px solid var(--cor-borda-padrao);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .04);
+}
+
+.barra-aplicativo-interna {
+  max-width: 1500px;
+  margin: auto;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.conteudo-menu-lateral {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+#container-botao-sair {
+  margin-top: auto !important;
+  width: 100% !important;
+}
+
+/* =========================================
+   SISTEMA DE GRADES (GRIDS)
+========================================= */
+.grade-personalizada { 
+  display: grid; 
+  gap: 16px; 
+}
+
+.grade-2-colunas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grade-3-colunas { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grade-4-colunas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* =========================================
+   CARTÕES (CARDS)
+========================================= */
+.cartao-personalizado {
+  background: var(--cor-fundo-cartao);
+  border: 1px solid var(--cor-borda-padrao);
+  border-radius: var(--borda-arredondada-padrao);
+  box-shadow: var(--sombra-padrao-cartao);
+  padding: 18px;
+  margin-top: 3em;
+}
+
+.cartao-personalizado h2,
+.cartao-personalizado h3 {
+  margin: 0 0 5px;
+}
+
+/* Card gerado dinamicamente para disciplinas */
+#container-lista-disciplinas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cartao-disciplina-azul {
+  flex: 1 1 320px;
+  border-left: 5px solid #0d6efd !important;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cartao-disciplina-azul:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15) !important;
+}
+/* =========================================
+   FORMULÁRIOS E TEXTOS (ESTILO DA IMAGEM)
+========================================= */
+.texto-subtitulo {
+  color: #718096;
+  font-size: 0.9rem;
+  margin: 4px 0 24px 0;
+}
+
+.cabecalho-secao-pagina {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.grade-personalizada { 
+  display: grid; 
+  gap: 20px 24px; 
+}
+
+.campo-formulario-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-formulario-custom label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #1a202c;
+}
+
+/* Estilização exata dos inputs e selects */
+.campo-formulario-custom .form-control,
+.campo-formulario-custom .form-select {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  color: #4a5568;
+  background-color: #ffffff;
+  box-shadow: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo-formulario-custom .form-control::placeholder {
+  color: #a0aec0;
+}
+
+.campo-formulario-custom .form-control:focus,
+.campo-formulario-custom .form-select:focus {
+  border-color: #cbd5e1;
+  box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.6);
+}

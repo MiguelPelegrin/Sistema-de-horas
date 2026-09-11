@@ -33,25 +33,6 @@
     margin-left: 5em;
 }
 
-.form-links{
-    display: flex;
-    justify-content: center;
-    margin-top: 1em;
-}
-.form-links a{
-    text-decoration: none;
-    color: #ffffff;
-    padding: 10px;
-    font-size: 16px;
-    font-family: "Raleway", sans-serif;
-    animation: .2s;
-    cursor: pointer;
-}
-
-.form-links a:hover{
-    color: var(--color-text-animation);
-}
-
 .btn-container{
     display: flex;
     justify-content: center;
@@ -87,4 +68,27 @@
 
 .btn-login span{
     color: #ffffff;
+}
+
+.form-links{
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+
+.form-links a{
+    text-decoration: none;
+}
+
+
+#suporte{
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+svg{
+    color: #fff;
+    cursor: pointer;
+    
 }

@@ -1,0 +1,33 @@
+@import url(./variaveis.css);
+.caixa-contato {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 10px;
+    background-color: #fafbfc;
+  }
+  
+  .icone-contato {
+    width: 48px;
+    height: 48px;
+    background-color: var(--cor-azul-escuro);
+    color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+  
+  .link-contato {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: var(--cor-texto);
+    text-decoration: none;
+  }
+  
+  .link-contato:hover {
+    color: var(--cor-vermelho);
+  }

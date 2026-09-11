@@ -1,0 +1,43 @@
+@import url(./variaveis.css);
+.btn-cronos {
+    background-color: var(--cor-vermelho);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: bold;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-cronos:hover {
+    background-color: var(--cor-vermelho-escuro);
+    color: #ffffff;
+  }
+  
+  .item-faq {
+    border: 1px solid var(--cor-borda) !important;
+    border-radius: 10px !important;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  
+  .botao-faq {
+    font-weight: bold;
+    color: var(--cor-texto);
+    background-color: #fafbfc;
+    box-shadow: none !important;
+  }
+  
+  .botao-faq:not(.collapsed) {
+    color: var(--cor-azul-escuro);
+    background-color: var(--cor-azul-claro);
+  }
+  
+  .resposta-faq p {
+    color: var(--cor-texto-suave);
+    margin-bottom: 15px;
+  }

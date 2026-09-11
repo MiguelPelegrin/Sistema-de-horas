@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Estilos customizados -->
+  <link rel="stylesheet" href="../css/Style.css" />
+
+  <!-- Bootstrap CSS & Ícones -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <title>Disciplinas</title>
+</head>
+
+<body>
+  <!-- NAVBAR / MENU SUPERIOR -->
+  <nav class="navbar navbar-dark bg-dark fixed-top shadow-sm navbar-personalizada">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand fw-bold text-uppercase d-flex align-items-center gap-2" href="#">
+        <i class="bi bi-cpu-fill text-primary"></i> CRONOS SYSTEM
+      </a>
+
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#menuLateralOffcanvas" aria-controls="menuLateralOffcanvas" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="offcanvas offcanvas-end text-bg-dark border-0 shadow-lg" tabindex="-1" id="menuLateralOffcanvas"
+        aria-labelledby="tituloMenuLateral">
+        <div class="offcanvas-header border-bottom border-secondary border-opacity-25 px-4 py-3">
+          <h5 class="offcanvas-title fw-bold text-uppercase d-flex align-items-center gap-2" id="tituloMenuLateral">
+            <i class="bi bi-cpu-fill text-primary"></i> CRONOS SYSTEM
+          </h5>
+          <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="conteudo-menu-lateral d-flex flex-column justify-content-between p-4">
+          <ul class="navbar-nav gap-2">
+            <li class="nav-item">
+              <a class="nav-link active d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Home.html">
+                <i class="bi bi-house-door"></i> Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+                <i class="bi bi-person-badge"></i> Professores
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+                <i class="bi bi-people"></i> Turmas
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+                <i class="bi bi-book"></i> Disciplinas
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Planilhas.html">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Planilhas
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 rounded" href="#"
+                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-plus-circle"></i> Adicionar
+              </a>
+              <ul id="dropdown-menu-adicionar" class="dropdown-menu dropdown-menu-dark border-secondary border-opacity-25 shadow">
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addProfessores.html"><i class="bi bi-person-plus"></i> Professor</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./AddTurmas.html"><i class="bi bi-people-fill"></i> Turma</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addDisciplinas.html"><i class="bi bi-journal-plus"></i> Disciplina</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <div id="container-botao-sair" class="pt-3 border-top border-secondary border-opacity-25">
+            <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2" href="./Login.html">
+              <i class="bi bi-box-arrow-left"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container-fluid mt-5 pt-4 px-4">
+    <section class="cartao-personalizado">
+      <div class="cabecalho-secao-pagina">
+        <div>
+          <h2>Adicionar disciplina</h2>
+          <p class="texto-subtitulo text-muted">
+            Disciplinas que serão adicionadas ou removidas do sistema.
+          </p>
+        </div>
+        <button onclick="adicionarDisciplina()" class="btn btn-primary">Salvar</button>
+      </div>
+
+      <div class="grade-personalizada grade-2-colunas">
+        <div class="campo-formulario-custom">
+          <label for="input-nome-disciplina">Disciplina</label>
+          <input id="input-nome-disciplina" class="form-control" placeholder="Ex: Matemática" />
+        </div>
+
+        <div class="campo-formulario-custom">
+          <label for="select-tem-prioridade">Prioridade (Ex: laboratório)</label>
+          <select id="select-tem-prioridade" class="form-select">
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
+        </div>
+
+        <div class="campo-formulario-custom">
+          <label for="select-cor-identificacao">Cor de Identificação</label>
+          <select id="select-cor-identificacao" class="form-select">
+            <option>Azul</option>
+            <option>Rosa</option>
+            <option>Amarelo</option>
+            <option>Verde</option>
+            <option>Vermelho</option>
+            <option>Roxo</option>
+            <option>Laranja</option>
+            <option>Cinza</option>
+            <option>Ciano</option>
+            <option>Marrom</option>
+          </select>
+        </div>
+
+        <div class="campo-formulario-custom">
+          <label for="select-qual-prioridade">Qual a Prioridade</label>
+          <select id="select-qual-prioridade" class="form-select">
+            <option value="Sem prioridade">Sem prioridade</option>
+            <option value="LAB 1 química">LAB 1 química</option>
+            <option value="LAB 2 química">LAB 2 química</option>
+            <option value="LAB 1 informática">LAB 1 informática</option>
+            <option value="LAB 2 informática">LAB 2 informática</option>
+            <option value="LAB 3 informática">LAB 3 informática</option>
+            <option value="LAB 4 informática">LAB 4 informática</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA DE CARDS GERADOS DINAMICAMENTE -->
+    <div id="container-lista-disciplinas" class="container-fluid mt-4 px-0"></div>
+  </main>
+
+  <!-- BOOTSTRAP JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+  <!-- LÓGICA JAVASCRIPT -->
+  <script>
+    const mapaCores = {
+      Azul: { bg: "#0d6efd", text: "#ffffff" },
+      Rosa: { bg: "#d63384", text: "#ffffff" },
+      Amarelo: { bg: "#ffc107", text: "#000000" },
+      Verde: { bg: "#198754", text: "#ffffff" },
+      Vermelho: { bg: "#dc3545", text: "#ffffff" },
+      Roxo: { bg: "#6f42c1", text: "#ffffff" },
+      Laranja: { bg: "#fd7e14", text: "#ffffff" },
+      Cinza: { bg: "#6c757d", text: "#ffffff" },
+      Ciano: { bg: "#0dcaf0", text: "#000000" },
+      Marrom: { bg: "#795548", text: "#ffffff" },
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const selectTemPrioridade = document.getElementById("select-tem-prioridade");
+      const selectQualPrioridade = document.getElementById("select-qual-prioridade");
+      const opcaoSemPrioridade = selectQualPrioridade.querySelector('option[value="Sem prioridade"]');
+
+      function atualizarEstadoPrioridade() {
+        if (selectTemPrioridade.value === "Não") {
+          opcaoSemPrioridade.disabled = false;
+          opcaoSemPrioridade.hidden = false;
+          selectQualPrioridade.value = "Sem prioridade";
+          selectQualPrioridade.disabled = true;
+        } else {
+          selectQualPrioridade.disabled = false;
+          opcaoSemPrioridade.disabled = true;
+          opcaoSemPrioridade.hidden = true;
+
+          if (selectQualPrioridade.value === "Sem prioridade") {
+            selectQualPrioridade.selectedIndex = 1;
+          }
+        }
+      }
+
+      selectTemPrioridade.addEventListener("change", atualizarEstadoPrioridade);
+      atualizarEstadoPrioridade();
+    });
+
+    function adicionarDisciplina() {
+      const inputNome = document.getElementById("input-nome-disciplina");
+      const selectTemPrioridade = document.getElementById("select-tem-prioridade");
+      const selectCor = document.getElementById("select-cor-identificacao");
+      const selectQualPrioridade = document.getElementById("select-qual-prioridade");
+      const containerLista = document.getElementById("container-lista-disciplinas");
+
+      const disciplina = inputNome.value.trim();
+      const temPrioridade = selectTemPrioridade.value;
+      const corNome = selectCor.value;
+      const qualPrioridade = selectQualPrioridade.disabled ? "Sem prioridade" : selectQualPrioridade.value;
+
+      if (disciplina === "") {
+        alert("Por favor, digite o nome da disciplina!");
+        return;
+      }
+
+      const estiloCor = mapaCores[corNome] || { bg: "#6c757d", text: "#ffffff" };
+
+      const novoCard = document.createElement("div");
+      novoCard.className = "cartao-disciplina-azul shadow-sm p-3 mb-2";
+
+      novoCard.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="linha-informacoes-disciplina">
+            <h5 class="mb-0 text-primary fw-bold me-2">${disciplina}</h5>
+            <span class="item-informacao-texto"><strong>Prioridade:</strong> ${temPrioridade}</span>
+            <span class="item-informacao-texto">
+              <strong>Cor:</strong> 
+              <span class="etiqueta-destaque-colorida" style="background-color: ${estiloCor.bg}; color: ${estiloCor.text};">
+                ${corNome}
+              </span>
+            </span>
+            <span class="item-informacao-texto"><strong>Qual:</strong> ${qualPrioridade}</span>
+          </div>
+          <button class="btn btn-outline-danger btn-sm" onclick="removerCardDisciplina(this, '${disciplina}')">Apagar</button>
+        </div>
+      `;
+
+      containerLista.appendChild(novoCard);
+
+      // Reseta o formulário
+      inputNome.value = "";
+      selectTemPrioridade.value = "Sim";
+      selectQualPrioridade.disabled = false;
+      selectQualPrioridade.selectedIndex = 1;
+    }
+
+    function removerCardDisciplina(botao, nomeDisciplina) {
+      if (confirm(`Deseja realmente apagar a disciplina "${nomeDisciplina}"?`)) {
+        const card = botao.closest(".cartao-disciplina-azul");
+        if (card) card.remove();
+      }
+    }
+  </script>
+</body>
+</html>
