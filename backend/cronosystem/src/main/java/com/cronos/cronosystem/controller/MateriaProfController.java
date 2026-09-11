@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.MateriaProf;
 import com.cronos.cronosystem.service.MateriaProfService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cronos.cronosystem.model.MateriaProf;
+import com.cronos.cronosystem.repository.MateriaProfRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.List;
 @RequestMapping("/materia-prof")
 public class MateriaProfController {
 
-    private final MateriaProfService service;
+    @Autowired
+    private MateriaProfRepository repository;
 
-    public MateriaProfController(MateriaProfService service) {
-        this.service = service;
-    }
+    @Autowired
+    private MateriaProfService service;
 
     @GetMapping
     public List<MateriaProf> listar() {
-        return service.listar();
+        return repository.findAll();
+    }
+
+    @GetMapping("/pornome")
+    public List<MateriaProf> pesquisar() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -30,23 +35,19 @@ public class MateriaProfController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public MateriaProf adicionar(@RequestBody @Valid MateriaProf materiaProf) {
-        return service.salvar(materiaProf);
-    }
-
-    @PutMapping("/{id}")
-    public MateriaProf alterar(@PathVariable Long id, @RequestBody @Valid MateriaProf materiaProf) {
-        MateriaProf atual = service.buscaroufalhar(id);
-        atual.setProf(materiaProf.getProf());
-        atual.setMateria(materiaProf.getMateria());
-        return service.salvar(atual);
+    public MateriaProf add(@RequestBody MateriaProf model) {
+        return service.salvar(model);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        service.buscaroufalhar(id);
+    public void remover(@PathVariable Long id) {
         service.excluir(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public MateriaProf atualizar(@PathVariable Long id, @RequestBody MateriaProf model) {
+        MateriaProf modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id");
+        return service.salvar(modelAtual);
     }
 }

@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.Prof;
 import com.cronos.cronosystem.service.ProfService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cronos.cronosystem.model.Prof;
+import com.cronos.cronosystem.repository.ProfRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.List;
 @RequestMapping("/prof")
 public class ProfController {
 
-    private final ProfService service;
+    @Autowired
+    private ProfRepository repository;
 
-    public ProfController(ProfService service) {
-        this.service = service;
-    }
+    @Autowired
+    private ProfService service;
 
     @GetMapping
     public List<Prof> listar() {
-        return service.listar();
+        return repository.findAll();
+    }
+
+    @GetMapping("/pornome")
+    public List<Prof> pesquisar() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -30,23 +35,19 @@ public class ProfController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Prof adicionar(@RequestBody @Valid Prof prof) {
-        return service.salvar(prof);
-    }
-
-    @PutMapping("/{id}")
-    public Prof alterar(@PathVariable Long id, @RequestBody @Valid Prof prof) {
-        Prof atual = service.buscaroufalhar(id);
-        atual.setNome(prof.getNome());
-        atual.setChm(prof.getChm());
-        return service.salvar(atual);
+    public Prof add(@RequestBody Prof model) {
+        return service.salvar(model);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        service.buscaroufalhar(id);
+    public void remover(@PathVariable Long id) {
         service.excluir(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public Prof atualizar(@PathVariable Long id, @RequestBody Prof model) {
+        Prof modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id");
+        return service.salvar(modelAtual);
     }
 }

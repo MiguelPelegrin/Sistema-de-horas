@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.Horario;
 import com.cronos.cronosystem.service.HorarioService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cronos.cronosystem.model.Horario;
+import com.cronos.cronosystem.repository.HorarioRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.List;
 @RequestMapping("/horario")
 public class HorarioController {
 
-    private final HorarioService service;
+    @Autowired
+    private HorarioRepository repository;
 
-    public HorarioController(HorarioService service) {
-        this.service = service;
-    }
+    @Autowired
+    private HorarioService service;
 
     @GetMapping
     public List<Horario> listar() {
-        return service.listar();
+        return repository.findAll();
+    }
+
+    @GetMapping("/pornome")
+    public List<Horario> pesquisar() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -30,24 +35,19 @@ public class HorarioController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Horario adicionar(@RequestBody @Valid Horario horario) {
-        return service.salvar(horario);
-    }
-
-    @PutMapping("/{id}")
-    public Horario alterar(@PathVariable Long id, @RequestBody @Valid Horario horario) {
-        Horario atual = service.buscaroufalhar(id);
-        atual.setDiaSemana(horario.getDiaSemana());
-        atual.setTempo_aula(horario.getTempo_aula());
-        atual.setTurmasep(horario.getTurmasep());
-        return service.salvar(atual);
+    public Horario add(@RequestBody Horario model) {
+        return service.salvar(model);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        service.buscaroufalhar(id);
+    public void remover(@PathVariable Long id) {
         service.excluir(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public Horario atualizar(@PathVariable Long id, @RequestBody Horario model) {
+        Horario modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id");
+        return service.salvar(modelAtual);
     }
 }
