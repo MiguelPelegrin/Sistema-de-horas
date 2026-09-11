@@ -13,7 +13,7 @@ public class HorarioDto {
 
     private Long id;
 
-    private String diaSemana;
+    private String dia_semana;
 
     private String tempo_aula;
 

@@ -1,8 +1,10 @@
 package com.cronos.cronosystem.controller;
 
 import com.cronos.cronosystem.model.Grade;
+import com.cronos.cronosystem.repository.GradeRepository;
 import com.cronos.cronosystem.service.GradeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +15,11 @@ import java.util.List;
 @RequestMapping("/grade")
 public class GradeController {
 
-    private final GradeService service;
+    @Autowired
+    private GradeRepository repository;
 
-    public GradeController(GradeService service) {
-        this.service = service;
-    }
+    @Autowired
+    private GradeService service;
 
     @GetMapping
     public List<Grade> listar() {

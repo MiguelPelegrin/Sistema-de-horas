@@ -39,13 +39,13 @@ public class MateriaRepositoryImpl implements MateriaRepositoryQuery{
         criteria.where(predicates);
         criteria.orderBy(builder.asc(root.get("nome")));
 
-        TypedQuery<Materia> query = manager.createQuery(criteria);
+        TypedQuery<MateriaDto> query = manager.createQuery(criteria);
         addRestPag(query, pageable);
 
         return new PageImpl<>(query.getResultList(), pageable, total(filter));
     }
 
-    private Object total(MateriaFilter filter) {
+    private Long total(MateriaFilter filter) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
         Root<Materia> root = criteria.from(Materia.class);
@@ -58,7 +58,7 @@ public class MateriaRepositoryImpl implements MateriaRepositoryQuery{
         return manager.createQuery(criteria).getSingleResult();
     }
 
-    private void addRestPag(TypedQuery<Materia> query, Pageable pageable) {
+    private void addRestPag(TypedQuery<MateriaDto> query, Pageable pageable) {
         int pagAtual = pageable.getPageNumber();
         int totalRegPorPag = pageable.getPageSize();
         int primRegPag = pagAtual * totalRegPorPag;
