@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.DispProf;
 import com.cronos.cronosystem.service.DispProfService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cronos.cronosystem.model.DispProf;
+import com.cronos.cronosystem.repository.DispProfRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.List;
 @RequestMapping("/disp-prof")
 public class DispProfController {
 
-    private final DispProfService service;
+    @Autowired
+    private DispProfRepository repository;
 
-    public DispProfController(DispProfService service) {
-        this.service = service;
-    }
+    @Autowired
+    private DispProfService service;
 
     @GetMapping
     public List<DispProf> listar() {
-        return service.listar();
+        return repository.findAll();
+    }
+
+    @GetMapping("/pornome")
+    public List<DispProf> pesquisar() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -30,23 +35,19 @@ public class DispProfController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public DispProf adicionar(@RequestBody @Valid DispProf dispProf) {
-        return service.salvar(dispProf);
-    }
-
-    @PutMapping("/{id}")
-    public DispProf alterar(@PathVariable Long id, @RequestBody @Valid DispProf dispProf) {
-        DispProf atual = service.buscaroufalhar(id);
-        atual.setProf(dispProf.getProf());
-        atual.setHorario(dispProf.getHorario());
-        return service.salvar(atual);
+    public DispProf add(@RequestBody DispProf model) {
+        return service.salvar(model);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        service.buscaroufalhar(id);
+    public void remover(@PathVariable Long id) {
         service.excluir(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public DispProf atualizar(@PathVariable Long id, @RequestBody DispProf model) {
+        DispProf modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id");
+        return service.salvar(modelAtual);
     }
 }

@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.Grade;
 import com.cronos.cronosystem.service.GradeService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cronos.cronosystem.model.Grade;
+import com.cronos.cronosystem.repository.GradeRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.List;
 @RequestMapping("/grade")
 public class GradeController {
 
-    private final GradeService service;
+    @Autowired
+    private GradeRepository repository;
 
-    public GradeController(GradeService service) {
-        this.service = service;
-    }
+    @Autowired
+    private GradeService service;
 
     @GetMapping
     public List<Grade> listar() {
-        return service.listar();
+        return repository.findAll();
+    }
+
+    @GetMapping("/pornome")
+    public List<Grade> pesquisar() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -30,24 +35,19 @@ public class GradeController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Grade adicionar(@RequestBody @Valid Grade grade) {
-        return service.salvar(grade);
-    }
-
-    @PutMapping("/{id}")
-    public Grade alterar(@PathVariable Long id, @RequestBody @Valid Grade grade) {
-        Grade atual = service.buscaroufalhar(id);
-        atual.setTurma(grade.getTurma());
-        atual.setMateriaProf(grade.getMateriaProf());
-        atual.setHorario(grade.getHorario());
-        return service.salvar(atual);
+    public Grade add(@RequestBody Grade model) {
+        return service.salvar(model);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        service.buscaroufalhar(id);
+    public void remover(@PathVariable Long id) {
         service.excluir(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public Grade atualizar(@PathVariable Long id, @RequestBody Grade model) {
+        Grade modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id");
+        return service.salvar(modelAtual);
     }
 }

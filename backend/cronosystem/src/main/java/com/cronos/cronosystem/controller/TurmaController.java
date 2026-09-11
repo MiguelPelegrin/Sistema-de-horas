@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.Turma;
 import com.cronos.cronosystem.service.TurmaService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cronos.cronosystem.model.Turma;
+import com.cronos.cronosystem.repository.TurmaRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.List;
 @RequestMapping("/turma")
 public class TurmaController {
 
-    private final TurmaService service;
+    @Autowired
+    private TurmaRepository repository;
 
-    public TurmaController(TurmaService service) {
-        this.service = service;
-    }
+    @Autowired
+    private TurmaService service;
 
     @GetMapping
     public List<Turma> listar() {
-        return service.listar();
+        return repository.findAll();
+    }
+
+    @GetMapping("/pornome")
+    public List<Turma> pesquisar() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -30,27 +35,19 @@ public class TurmaController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Turma adicionar(@RequestBody @Valid Turma turma) {
-        return service.salvar(turma);
-    }
-
-    @PutMapping("/{id}")
-    public Turma alterar(@PathVariable Long id, @RequestBody @Valid Turma turma) {
-        Turma atual = service.buscaroufalhar(id);
-        atual.setNome(turma.getNome());
-        atual.setTurno(turma.getTurno());
-        return service.salvar(atual);
+    public Turma add(@RequestBody Turma model) {
+        return service.salvar(model);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        service.buscaroufalhar(id);
+    public void remover(@PathVariable Long id) {
         service.excluir(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public Turma atualizar(@PathVariable Long id, @RequestBody Turma model) {
+        Turma modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id");
+        return service.salvar(modelAtual);
     }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4

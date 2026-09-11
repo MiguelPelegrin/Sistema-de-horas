@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.Materia;
 import com.cronos.cronosystem.service.MateriaService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cronos.cronosystem.model.Materia;
+import com.cronos.cronosystem.repository.MateriaRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.List;
 @RequestMapping("/materia")
 public class MateriaController {
 
-    private final MateriaService service;
+    @Autowired
+    private MateriaRepository repository;
 
-    public MateriaController(MateriaService service) {
-        this.service = service;
-    }
+    @Autowired
+    private MateriaService service;
 
     @GetMapping
     public List<Materia> listar() {
-        return service.listar();
+        return repository.findAll();
+    }
+
+    @GetMapping("/pornome")
+    public List<Materia> pesquisar() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -30,22 +35,19 @@ public class MateriaController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Materia adicionar(@RequestBody @Valid Materia materia) {
-        return service.salvar(materia);
-    }
-
-    @PutMapping("/{id}")
-    public Materia alterar(@PathVariable Long id, @RequestBody @Valid Materia materia) {
-        Materia atual = service.buscaroufalhar(id);
-        atual.setNome(materia.getNome());
-        return service.salvar(atual);
+    public Materia add(@RequestBody Materia model) {
+        return service.salvar(model);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Long id) {
-        service.buscaroufalhar(id);
+    public void remover(@PathVariable Long id) {
         service.excluir(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public Materia atualizar(@PathVariable Long id, @RequestBody Materia model) {
+        Materia modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id");
+        return service.salvar(modelAtual);
     }
 }

@@ -8,19 +8,14 @@ import com.cronos.cronosystem.repository.filter.UsuarioFilter;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import com.cronos.cronosystem.service.UsuarioService;
-import jakarta.validation.Valid;
+import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-<<<<<<< HEAD
-=======
-import java.nio.file.AccessDeniedException;
->>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
 import java.util.List;
 
 @RestController
@@ -34,71 +29,52 @@ public class UsuarioController {
     private UsuarioService service;
 
     @GetMapping
-<<<<<<< HEAD
-    public List<Usuario> listar(){return repository.findAll();}
-    @GetMapping("/pornome")
-    public Page<UsuarioDto> listarPorNome(UsuarioFilter userFilter, Pageable pageable){
-        return repository.filtrar(userFilter, pageable);
-=======
-    public List<Usuario> listar(){ return repository.findAll(); }
+    public List<Usuario> listar() {
+        return repository.findAll();
+    }
 
     @GetMapping("/pornome")
-    public Page<UsuarioDto> listarPorNome(UsuarioFilter filter, Pageable pageable){
+    public Page<UsuarioDto> pesquisar(UsuarioFilter filter, Pageable pageable) {
         return repository.filtrar(filter, pageable);
->>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
     }
 
     @GetMapping("/me")
-    public Usuario buscarLogado(@AuthenticationPrincipal Usuario usuarioLogado){
+    public Usuario buscarLogado(@AuthenticationPrincipal Usuario usuarioLogado) {
         return usuarioLogado;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Object> buscar(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado){
-        Usuario usuario = service.buscaroufalhar(userId);
-
-        boolean ehDono = usuarioLogado != null && userId.equals(usuarioLogado.getId());
-        boolean ehAdmin = usuarioLogado != null && Boolean.TRUE.equals(usuarioLogado.getAdmin());
-
-        if (ehDono || ehAdmin) {
-            return ResponseEntity.ok(usuario);
-        }
-        return ResponseEntity.ok(new UsuarioPublicoDto(usuario.getId(), usuario.getNome()));
+    @GetMapping("/{id}")
+    public Usuario buscar(@PathVariable Long id) {
+        return service.buscaroufalhar(id);
     }
 
     @PostMapping
-    public Usuario adicionar(@RequestBody @Valid UsuarioCadastroDto dados) { return service.cadastrar(dados); }
-
-    @DeleteMapping("/{userId}")
-<<<<<<< HEAD
-    public void remover(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado) {
-=======
-    public void remover(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
->>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
-        service.validarDono(userId, usuarioLogado);
-        service.excluir(userId);
+    public Usuario add(@RequestBody UsuarioCadastroDto dados) {
+        return service.cadastrar(dados);
     }
 
-    @PutMapping("/{userId}")
-<<<<<<< HEAD
-    public Usuario alterar(@PathVariable Long userId, @RequestBody Usuario user, @AuthenticationPrincipal Usuario usuarioLogado){
-=======
-    public Usuario alterar(@PathVariable Long userId, @RequestBody Usuario user, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
->>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
-        service.validarDono(userId, usuarioLogado);
-
-        Usuario userAtual = service.buscaroufalhar(userId);
-        BeanUtils.copyProperties(user, userAtual, "id", "senha", "plano", "admin");
-        return service.salvar(userAtual);
+    @SneakyThrows
+    @DeleteMapping("/{id}")
+    public void remover(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
+        service.validarDono(id, usuarioLogado);
+        service.excluir(id);
     }
 
-    @PutMapping("/{userId}/senha")
-<<<<<<< HEAD
-    public Usuario alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal Usuario usuarioLogado){
-=======
-    public Usuario alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
->>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
-        service.validarDono(userId, usuarioLogado);
-        return service.alterarSenha(userId, dados);
+    @SneakyThrows
+    @PutMapping("/{id}")
+    public Usuario atualizar(@PathVariable Long id, @RequestBody Usuario model,
+                             @AuthenticationPrincipal Usuario usuarioLogado) {
+        service.validarDono(id, usuarioLogado);
+        Usuario modelAtual = service.buscaroufalhar(id);
+        BeanUtils.copyProperties(model, modelAtual, "id", "senha", "plano", "admin");
+        return service.salvar(modelAtual);
+    }
+
+    @SneakyThrows
+    @PutMapping("/{id}/senha")
+    public Usuario alterarSenha(@PathVariable Long id, @RequestBody AlterarSenhaDto dados,
+                                @AuthenticationPrincipal Usuario usuarioLogado) {
+        service.validarDono(id, usuarioLogado);
+        return service.alterarSenha(id, dados);
     }
 }
