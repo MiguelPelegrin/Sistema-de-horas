@@ -1,3 +1,3 @@
-@import url("../../Global/css/global.css");
-@import url("./divProfessor.css");
-@import url("./buttonAdd.css");
+@import url("./Partials/btns.css");
+@import url("./Partials/responsividade.css");
+@import url("./Partials/dadosAdd.css");

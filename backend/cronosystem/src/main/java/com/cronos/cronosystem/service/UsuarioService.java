@@ -1,47 +1,66 @@
 package com.cronos.cronosystem.service;
 
-import com.cronos.cronosystem.dto.CadastroRequest;
-import com.cronos.cronosystem.dto.LoginRequest;
-import com.cronos.cronosystem.dto.LoginResponse;
-import com.cronos.cronosystem.dto.UsuarioResponse;
-import com.cronos.cronosystem.exception.CredenciaisInvalidasException;
-import com.cronos.cronosystem.exception.EmailJaCadastradoException;
+import com.cronos.cronosystem.dto.AlterarSenhaDto;
+import com.cronos.cronosystem.dto.UsuarioCadastroDto;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.file.AccessDeniedException;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    @Autowired
+    private UsuarioRepository repository;
 
-    public UsuarioResponse cadastrar(CadastroRequest request) {
-        if (usuarioRepository.existsByEmail(request.email())) {
-            throw new EmailJaCadastradoException(request.email());
-        }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    @Transactional
+    public Usuario cadastrar(UsuarioCadastroDto dados){
         Usuario usuario = new Usuario();
-        usuario.setNome(request.nome());
-        usuario.setEmail(request.email());
-        usuario.setSenha(passwordEncoder.encode(request.senha()));
-
-        return UsuarioResponse.fromEntity(usuarioRepository.save(usuario));
+        usuario.setNome(dados.nome());
+        usuario.setEmail(dados.email());
+        usuario.setSenha(passwordEncoder.encode(dados.senha()));
+        usuario.setAdmin(false);
+        return repository.save(usuario);
     }
 
-    public LoginResponse login(LoginRequest request) {
-        Usuario usuario = usuarioRepository.findByEmail(request.email())
-                .orElseThrow(CredenciaisInvalidasException::new);
+    @Transactional
+    public Usuario salvar(Usuario usuario){return repository.save(usuario);}
 
-        if (!passwordEncoder.matches(request.senha(), usuario.getSenha())) {
-            throw new CredenciaisInvalidasException();
+    @Transactional
+    public Usuario alterarSenha(Long userId, AlterarSenhaDto dados){
+        Usuario usuario = buscaroufalhar(userId);
+
+        if (!passwordEncoder.matches(dados.senhaAtual(), usuario.getSenha())) {
+            throw new BadCredentialsException("Senha atual incorreta.");
         }
 
-        String token = jwtService.gerarToken(usuario);
-        return new LoginResponse(token, usuario.getId(), usuario.getNome(), usuario.getEmail());
+        usuario.setSenha(passwordEncoder.encode(dados.novaSenha()));
+        return repository.save(usuario);
+    }
+
+    public Usuario buscaroufalhar(Long userId){
+        return repository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("usuario não encontrado com esse ID."));
+    }
+
+    @Transactional
+    public void excluir(Long userId){ repository.deleteById(userId);}
+
+    public void validarDono(Long userId, Usuario usuarioLogado) throws AccessDeniedException { // Se erro tirar throws AccessDeniedException
+        boolean ehDono = userId.equals(usuarioLogado.getId());
+        boolean ehAdmin = Boolean.TRUE.equals(usuarioLogado.getAdmin());
+
+        if (!ehDono && !ehAdmin) {
+            throw new AccessDeniedException("Você não tem permissão para alterar este usuário");
+        }
     }
 }

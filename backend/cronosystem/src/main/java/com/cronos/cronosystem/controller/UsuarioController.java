@@ -17,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< HEAD
+=======
+import java.nio.file.AccessDeniedException;
+>>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
 import java.util.List;
 
 @RestController
@@ -30,10 +34,18 @@ public class UsuarioController {
     private UsuarioService service;
 
     @GetMapping
+<<<<<<< HEAD
     public List<Usuario> listar(){return repository.findAll();}
     @GetMapping("/pornome")
     public Page<UsuarioDto> listarPorNome(UsuarioFilter userFilter, Pageable pageable){
         return repository.filtrar(userFilter, pageable);
+=======
+    public List<Usuario> listar(){ return repository.findAll(); }
+
+    @GetMapping("/pornome")
+    public Page<UsuarioDto> listarPorNome(UsuarioFilter filter, Pageable pageable){
+        return repository.filtrar(filter, pageable);
+>>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
     }
 
     @GetMapping("/me")
@@ -58,13 +70,21 @@ public class UsuarioController {
     public Usuario adicionar(@RequestBody @Valid UsuarioCadastroDto dados) { return service.cadastrar(dados); }
 
     @DeleteMapping("/{userId}")
+<<<<<<< HEAD
     public void remover(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado) {
+=======
+    public void remover(@PathVariable Long userId, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
+>>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
         service.validarDono(userId, usuarioLogado);
         service.excluir(userId);
     }
 
     @PutMapping("/{userId}")
+<<<<<<< HEAD
     public Usuario alterar(@PathVariable Long userId, @RequestBody Usuario user, @AuthenticationPrincipal Usuario usuarioLogado){
+=======
+    public Usuario alterar(@PathVariable Long userId, @RequestBody Usuario user, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
+>>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
         service.validarDono(userId, usuarioLogado);
 
         Usuario userAtual = service.buscaroufalhar(userId);
@@ -73,7 +93,11 @@ public class UsuarioController {
     }
 
     @PutMapping("/{userId}/senha")
+<<<<<<< HEAD
     public Usuario alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal Usuario usuarioLogado){
+=======
+    public Usuario alterarSenha(@PathVariable Long userId, @RequestBody @Valid AlterarSenhaDto dados, @AuthenticationPrincipal Usuario usuarioLogado) throws AccessDeniedException {
+>>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
         service.validarDono(userId, usuarioLogado);
         return service.alterarSenha(userId, dados);
     }

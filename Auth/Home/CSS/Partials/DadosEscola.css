@@ -1,0 +1,155 @@
+.grid {
+    display: grid;
+    gap: 16px
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+}
+
+.grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px
+}
+
+.sub {
+    color: var(--muted);
+    margin: 0 0 14px
+}
+
+/*
+Parte dos btn
+*/
+
+.btn {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 850;
+    cursor: pointer;
+    transition: .15s;
+    border: 10px solid var(--border);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+
+}
+
+.btn-primary {
+    background: var(--red);
+    color: #fff
+}
+
+.btn-primary:hover {
+    background: var(--red-dark)
+}
+
+.btn-secondary {
+    background: #edf1f5;
+    color: #273243
+}
+
+.btn-outline {
+    background: #fff;
+    border: 1px solid var(--border);
+    color: #273243
+}
+
+.btn-danger {
+    background: #fdeceb;
+    color: var(--danger)
+}
+
+.btn-success {
+    background: #eaf7ee;
+    color: var(--ok)
+}
+
+.btn-small {
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: .82rem
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px
+}
+
+.field label {
+    font-weight: 800;
+    font-size: .9rem
+}
+
+.field small {
+    color: var(--muted)
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 11px;
+    background: #fff;
+    outline: none
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: #7e91d9;
+    box-shadow: 0 0 0 3px rgba(13, 29, 130, .08)
+}
+
+.pills {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap
+}
+
+.pill {
+    padding: 8px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #fafbfc;
+    font-weight: 800;
+    cursor: pointer
+}
+
+.pill.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff
+}
+
+
+.note {
+    background: #f7f8fa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #4f5966
+}

@@ -1,3 +1,39 @@
-nav{
-    background-color: #A3130D;
+.img-logo{
+    width: 180px;
+    
+}
+
+#exit{
+    font-size: 20px;
+    padding: 10px;
+    margin-left: -20px;
+}
+
+#exit-event {
+    transition: .2s;
+    cursor: pointer;
+    gap: 8px;
+}
+
+#exit-event:hover {
+    background-color: red;
+}
+
+.offcanvas-body{
+    background: #258eb8;
+    background: linear-gradient(197deg, rgba(37, 142, 184, 1) 0%, rgba(20, 95, 125, 1) 22%, rgba(6, 66, 92, 1) 50%, rgba(4, 49, 66, 1) 100%);
+}
+
+.offcanvas-header{
+    background: #258eb8;
+    background: linear-gradient(90deg, rgba(37, 142, 184, 1) 0%, rgba(20, 95, 125, 1) 22%, rgba(6, 66, 92, 1) 50%, rgba(4, 49, 66, 1) 100%);
+}
+
+.navbar{
+    background: #0984b5;
+    background: linear-gradient(90deg, rgba(9, 132, 181, 1) 0%, rgba(14, 104, 140, 1) 50%, rgba(11, 61, 82, 1) 100%);
+}
+
+#navbar-add{
+    background-color: #4bb5df6c;
 }
