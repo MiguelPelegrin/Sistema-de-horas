@@ -23,4 +23,8 @@ public class Usuario {
 
     @NotNull
     private  String senha;
+
+    @NotNull
+    @Column(name = "admin")
+    private Boolean admin = false;
 }

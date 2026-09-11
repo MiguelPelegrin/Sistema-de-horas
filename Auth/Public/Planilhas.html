@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/turma/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+
+  <nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">CRONOS SYSTEM</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">CRONOS SYSTEM</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./Home.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./professores.html">Professores</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./Turmas.html">Turmas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Disciplinas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./Planilhas.html">Planilhas</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Adicionar
+              </a>
+              <ul id="navbar-add" class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="#">Professor</a></li>
+                <li><a class="dropdown-item" href="#">Turma</a></li>
+                <li><a class="dropdown-item" href="./addDisciplinas.html">Diciplina</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+              </ul>
+              <li id="exit-event">
+                <a class="dropdown-item" href="#"> <i id="exit" class="bi bi-box-arrow-left"></i> sair</a>
+              </li>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+      <div class="container">
+
+        <h2>Planilhas</h2>
+        <p>Pesquise ou adicione Planilhas</p>
+
+        <div class="d-flex">
+          <div>
+            <input id="pesquisarPlanilha"  placeholder="pesquisar" style="width: 100%; padding: 5px;" type="text">
+          </div>
+
+          <div class="d2">
+            <button  onclick="adicionarTurma()" class="ButtonAdd" >Gerar Plailha</button>
+          </div>
+        </div>
+
+        <!-- Aqui aparecerão as disciplinas -->
+        <div id="listaTurma"></div>
+
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+      <script src="././turma/js/criarTurmas.js"></script>
+</body>
+</html>
