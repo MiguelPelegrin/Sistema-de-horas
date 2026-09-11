@@ -12,6 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedHeaders("*")
-                .allowedMethods("*");
+                .allowedMethods("*")
+                .allowCredentials(true); // Permite o envio de cookies/tokens se necessário
     }
 }

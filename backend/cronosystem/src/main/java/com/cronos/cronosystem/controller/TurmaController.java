@@ -50,7 +50,3 @@ public class TurmaController {
         return ResponseEntity.noContent().build();
     }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 213e4f1844b76ed2267df2615accad37e9e0b4d4
