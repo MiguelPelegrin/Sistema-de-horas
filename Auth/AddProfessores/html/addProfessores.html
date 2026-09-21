@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="../css/Style.css" />
+  <link rel="stylesheet" href="../../Global/css/global.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -13,9 +14,9 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-dark bg-dark fixed-top shadow-sm custom-navbar">
+  <nav class="navbar navbar-dark fixed-top shadow-sm navbar-standard">
     <div class="container-fluid px-4">
-      <a class="navbar-brand fw-bold text-uppercase tracking-wider d-flex align-items-center gap-2" href="#">
+      <a class="navbar-brand fw-bold text-uppercase tracking-wider d-flex align-items-center gap-2" href="../../Public/Home.html">
         <i class="bi bi-cpu-fill text-primary"></i> CRONOS SYSTEM
       </a>
 
@@ -39,27 +40,27 @@
           <ul class="navbar-nav gap-2">
             <li class="nav-item">
               <a class="nav-link active d-flex align-items-center gap-2 px-3 py-2 rounded" aria-current="page"
-                href="./Home.html">
+                href="../../Public/Home.html">
                 <i class="bi bi-house-door"></i> Home
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./addProfessores.html">
                 <i class="bi bi-person-badge"></i> Professores
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddTurma/html/AddTurmas.html">
                 <i class="bi bi-people"></i> Turmas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddDisciplinas/html/addDisciplinas.html">
                 <i class="bi bi-book"></i> Disciplinas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Planilhas.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/Planilhas.html">
                 <i class="bi bi-file-earmark-spreadsheet"></i> Planilhas
               </a>
             </li>
@@ -71,9 +72,9 @@
               <ul id="navbar-add" class="dropdown-menu dropdown-menu-dark border-secondary border-opacity-25 shadow">
                 <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addProfessores.html"><i
                       class="bi bi-person-plus"></i> Professor</a></li>
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./AddTurmas.html"><i
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddTurma/html/AddTurmas.html"><i
                       class="bi bi-people-fill"></i> Turma</a></li>
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addDisciplinas.html"><i
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddDisciplinas/html/addDisciplinas.html"><i
                       class="bi bi-journal-plus"></i> Disciplina</a></li>
               </ul>
             </li>
@@ -81,8 +82,8 @@
 
           <div id="exit-event" class="pt-3 border-top border-secondary border-opacity-25">
             <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2"
-              href="./Login.html">
-              <i id="exit" class="bi bi-box-arrow-left"></i> Sair
+              href="../../../index.html">
+              <i id="exit" class="bi bi-house"></i> Início
             </a>
           </div>
         </div>
@@ -116,6 +117,11 @@
       <div class="col-md-6">
         <label for="input-quantidade-materias" class="form-label">Número de matérias lecionadas</label>
         <input id="input-quantidade-materias" class="form-control" placeholder="Ex: 1, 2, 3" />
+      </div>
+
+      <div class="col-md-6">
+        <label for="input-carga-horaria" class="form-label">Carga horária máxima</label>
+        <input id="input-carga-horaria" class="form-control" type="number" min="0" required placeholder="Ex: 20" />
       </div>
 
       <div class="col-md-6">
