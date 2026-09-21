@@ -1,8 +1,8 @@
 package com.cronos.cronosystem.repository.MateriaProf;
 
 import com.cronos.cronosystem.dto.MateriaProfDto;
-import com.cronos.cronosystem.repository.filter.MateriaProfFilter;
 import com.cronos.cronosystem.model.MateriaProf;
+import com.cronos.cronosystem.repository.filter.MateriaProfFilter;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -24,60 +24,130 @@ public class MateriaProfRepositoryImpl implements MateriaProfRepositoryQuery {
     private EntityManager manager;
 
     @Override
-    public Page<MateriaProfDto> filtrar(MateriaProfFilter filter, Pageable pageable) {
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<MateriaProfDto> criteria = builder.createQuery(MateriaProfDto.class);
-        Root<MateriaProf> root = criteria.from(MateriaProf.class);
+    public Page<MateriaProfDto> filtrar(
+            MateriaProfFilter filter,
+            Pageable pageable) {
 
-        criteria.select(builder.construct(MateriaProfDto.class,
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+
+        CriteriaQuery<MateriaProfDto> criteria =
+                builder.createQuery(MateriaProfDto.class);
+
+        Root<MateriaProf> root =
+                criteria.from(MateriaProf.class);
+
+        criteria.select(builder.construct(
+                MateriaProfDto.class,
                 root.get("id"),
-                root.get("nome"),
-                root.get("chm")
+                root.get("prof"),
+                root.get("materia")
         ));
 
-        Predicate[] predicates = criarRestricoes(filter, builder, root);
+        Predicate[] predicates =
+                criarRestricoes(filter, builder, root);
 
         criteria.where(predicates);
-        criteria.orderBy(builder.asc(root.get("nome")));
 
-        TypedQuery<MateriaProfDto> query = manager.createQuery(criteria);
+        criteria.orderBy(
+                builder.asc(root.get("prof").get("nome"))
+        );
+
+        TypedQuery<MateriaProfDto> query =
+                manager.createQuery(criteria);
+
         addRestPag(query, pageable);
 
-        return new PageImpl<>(query.getResultList(), pageable, total(filter));
+        return new PageImpl<>(
+                query.getResultList(),
+                pageable,
+                total(filter)
+        );
     }
 
     private Long total(MateriaProfFilter filter) {
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-        Root<MateriaProf> root = criteria.from(MateriaProf.class);
 
-        Predicate[] predicates = criarRestricoes(filter, builder, root);
+        CriteriaBuilder builder =
+                manager.getCriteriaBuilder();
+
+        CriteriaQuery<Long> criteria =
+                builder.createQuery(Long.class);
+
+        Root<MateriaProf> root =
+                criteria.from(MateriaProf.class);
+
+        Predicate[] predicates =
+                criarRestricoes(filter, builder, root);
+
         criteria.where(predicates);
 
         criteria.select(builder.count(root));
 
-        return manager.createQuery(criteria).getSingleResult();
+        return manager.createQuery(criteria)
+                .getSingleResult();
     }
 
-    private void addRestPag(TypedQuery<MateriaProfDto> query, Pageable pageable) {
+    private void addRestPag(
+            TypedQuery<MateriaProfDto> query,
+            Pageable pageable) {
+
         int pagAtual = pageable.getPageNumber();
         int totalRegPorPag = pageable.getPageSize();
-        int primRegPag = pagAtual * totalRegPorPag;
 
-        query.setFirstResult(primRegPag);
+        int totalRegPorPagina = pageable.getPageSize();
+
+        int primeiroRegistro =
+                pagAtual * totalRegPorPagina;
+
+        query.setFirstResult(primeiroRegistro);
         query.setMaxResults(totalRegPorPag);
-
     }
 
-    private Predicate[] criarRestricoes(MateriaProfFilter filter, CriteriaBuilder builder, Root<MateriaProf> root) {
-        List<Predicate> predicates = new ArrayList<>();
+    private Predicate[] criarRestricoes(
+            MateriaProfFilter filter,
+            CriteriaBuilder builder,
+            Root<MateriaProf> root) {
 
-        if(!StringUtils.isEmpty(filter.getMateria())) {
-            predicates.add(builder.like(builder.lower(root.get("nome")), "%" + filter.getMateria().toLowerCase()));
+        List<Predicate> predicates =
+                new ArrayList<>();
+
+        if (filter == null) {
+            return predicates.toArray(new Predicate[0]);
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        /*
+         * FILTRO POR PROFESSOR
+         */
+        if (StringUtils.isNotBlank(filter.getProf())) {
 
+            predicates.add(
+                    builder.like(
+                            builder.lower(
+                                    root.get("prof").get("nome")
+                            ),
+                            "%" +
+                                    filter.getProf().toLowerCase() +
+                                    "%"
+                    )
+            );
+        }
+
+        /*
+         * FILTRO POR MATÉRIA
+         */
+        if (StringUtils.isNotBlank(filter.getMateria())) {
+
+            predicates.add(
+                    builder.like(
+                            builder.lower(
+                                    root.get("materia").get("nome")
+                            ),
+                            "%" +
+                                    filter.getMateria().toLowerCase() +
+                                    "%"
+                    )
+            );
+        }
+
+        return predicates.toArray(new Predicate[0]);
     }
 }
-
