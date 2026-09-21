@@ -16,13 +16,36 @@ async function carregarProfessores() {
 
     professores.forEach(professor => {
       const item = document.createElement("div");
-      item.className = "border rounded p-3 mb-2 bg-light";
-      item.textContent = `${professor.nome} - Carga horária máxima: ${professor.chm ?? "não informada"}`;
+      item.className = "border rounded p-3 mb-2 bg-light d-flex justify-content-between align-items-center gap-3";
+
+      const texto = document.createElement("span");
+      texto.textContent = `${professor.nome} - Carga horária máxima: ${professor.chm ?? "não informada"}`;
+
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.className = "btn btn-outline-danger btn-sm";
+      botao.textContent = "Apagar";
+      botao.addEventListener("click", () => apagarProfessor(professor.id, professor.nome));
+
+      item.append(texto, botao);
       lista.appendChild(item);
     });
   } catch (error) {
     console.error(error);
     lista.textContent = "Não foi possível carregar os professores cadastrados.";
+  }
+}
+
+async function apagarProfessor(id, nome) {
+  if (!confirm(`Deseja apagar o professor "${nome}"?`)) return;
+
+  try {
+    const response = await fetch(`http://localhost:8080/prof/${id}`, { method: "DELETE" });
+    if (!response.ok) throw new Error(`Erro ao apagar professor (${response.status})`);
+    await carregarProfessores();
+  } catch (error) {
+    console.error(error);
+    alert("Não foi possível apagar o professor.");
   }
 }
 
