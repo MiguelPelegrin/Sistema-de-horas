@@ -146,8 +146,10 @@
       </div>
     </section>
 
-    <!-- LISTA DE CARDS GERADOS DINAMICAMENTE -->
-    <div id="container-lista-disciplinas" class="container-fluid mt-4 px-0"></div>
+    <section class="cartao-personalizado mt-4">
+      <h3>Disciplinas cadastradas</h3>
+      <div id="lista-disciplinas-cadastradas" class="mt-3"></div>
+    </section>
   </main>
 
   <!-- BOOTSTRAP JS -->
@@ -168,7 +170,36 @@
       Marrom: { bg: "#795548", text: "#ffffff" },
     };
 
+    async function carregarDisciplinas() {
+      const lista = document.getElementById("lista-disciplinas-cadastradas");
+      if (!lista) return;
+
+      try {
+        const response = await fetch("http://localhost:8080/materia");
+        if (!response.ok) throw new Error(`Erro ao buscar disciplinas (${response.status})`);
+
+        const disciplinas = await response.json();
+        lista.replaceChildren();
+
+        if (disciplinas.length === 0) {
+          lista.textContent = "Nenhuma disciplina cadastrada.";
+          return;
+        }
+
+        disciplinas.forEach(disciplina => {
+          const item = document.createElement("div");
+          item.className = "border rounded p-3 mb-2 bg-light";
+          item.textContent = disciplina.nome;
+          lista.appendChild(item);
+        });
+      } catch (error) {
+        console.error(error);
+        lista.textContent = "Não foi possível carregar as disciplinas cadastradas.";
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+      carregarDisciplinas();
       const selectTemPrioridade = document.getElementById("select-tem-prioridade");
       const selectQualPrioridade = document.getElementById("select-qual-prioridade");
       const opcaoSemPrioridade = selectQualPrioridade.querySelector('option[value="Sem prioridade"]');
@@ -199,7 +230,6 @@
       const selectTemPrioridade = document.getElementById("select-tem-prioridade");
       const selectCor = document.getElementById("select-cor-identificacao");
       const selectQualPrioridade = document.getElementById("select-qual-prioridade");
-      const containerLista = document.getElementById("container-lista-disciplinas");
 
       const disciplina = inputNome.value.trim();
       const temPrioridade = selectTemPrioridade.value;
@@ -229,29 +259,7 @@
         return;
       }
 
-      const estiloCor = mapaCores[corNome] || { bg: "#6c757d", text: "#ffffff" };
-
-      const novoCard = document.createElement("div");
-      novoCard.className = "cartao-disciplina-azul shadow-sm p-3 mb-2";
-
-      novoCard.innerHTML = `
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-          <div class="linha-informacoes-disciplina">
-            <h5 class="mb-0 text-primary fw-bold me-2">${disciplina}</h5>
-            <span class="item-informacao-texto"><strong>Prioridade:</strong> ${temPrioridade}</span>
-            <span class="item-informacao-texto">
-              <strong>Cor:</strong> 
-              <span class="etiqueta-destaque-colorida" style="background-color: ${estiloCor.bg}; color: ${estiloCor.text};">
-                ${corNome}
-              </span>
-            </span>
-            <span class="item-informacao-texto"><strong>Qual:</strong> ${qualPrioridade}</span>
-          </div>
-          <button class="btn btn-outline-danger btn-sm" onclick="removerCardDisciplina(this, '${disciplina}')">Apagar</button>
-        </div>
-      `;
-
-      containerLista.appendChild(novoCard);
+      carregarDisciplinas();
 
       // Reseta o formulário
       inputNome.value = "";
@@ -260,12 +268,6 @@
       selectQualPrioridade.selectedIndex = 1;
     }
 
-    function removerCardDisciplina(botao, nomeDisciplina) {
-      if (confirm(`Deseja realmente apagar a disciplina "${nomeDisciplina}"?`)) {
-        const card = botao.closest(".cartao-disciplina-azul");
-        if (card) card.remove();
-      }
-    }
   </script>
 </body>
 </html>
