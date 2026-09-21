@@ -7,6 +7,7 @@
 
   <!-- Estilos customizados -->
   <link rel="stylesheet" href="../css/Style.css" />
+  <link rel="stylesheet" href="../../Global/css/global.css" />
 
   <!-- Bootstrap CSS & Ícones -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
@@ -17,9 +18,9 @@
 
 <body>
   <!-- NAVBAR / MENU SUPERIOR -->
-  <nav class="navbar navbar-dark bg-dark fixed-top shadow-sm navbar-personalizada">
+  <nav class="navbar navbar-dark fixed-top shadow-sm navbar-standard">
     <div class="container-fluid px-4">
-      <a class="navbar-brand fw-bold text-uppercase d-flex align-items-center gap-2" href="#">
+      <a class="navbar-brand fw-bold text-uppercase d-flex align-items-center gap-2" href="../../Public/Home.html">
         <i class="bi bi-cpu-fill text-primary"></i> CRONOS SYSTEM
       </a>
 
@@ -40,27 +41,27 @@
         <div class="conteudo-menu-lateral d-flex flex-column justify-content-between p-4">
           <ul class="navbar-nav gap-2">
             <li class="nav-item">
-              <a class="nav-link active d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Home.html">
+              <a class="nav-link active d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/Home.html">
                 <i class="bi bi-house-door"></i> Home
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddProfessores/html/addProfessores.html">
                 <i class="bi bi-person-badge"></i> Professores
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddTurma/html/AddTurmas.html">
                 <i class="bi bi-people"></i> Turmas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="#">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./addDisciplinas.html">
                 <i class="bi bi-book"></i> Disciplinas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Planilhas.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/Planilhas.html">
                 <i class="bi bi-file-earmark-spreadsheet"></i> Planilhas
               </a>
             </li>
@@ -70,16 +71,16 @@
                 <i class="bi bi-plus-circle"></i> Adicionar
               </a>
               <ul id="dropdown-menu-adicionar" class="dropdown-menu dropdown-menu-dark border-secondary border-opacity-25 shadow">
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addProfessores.html"><i class="bi bi-person-plus"></i> Professor</a></li>
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./AddTurmas.html"><i class="bi bi-people-fill"></i> Turma</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddProfessores/html/addProfessores.html"><i class="bi bi-person-plus"></i> Professor</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddTurma/html/AddTurmas.html"><i class="bi bi-people-fill"></i> Turma</a></li>
                 <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addDisciplinas.html"><i class="bi bi-journal-plus"></i> Disciplina</a></li>
               </ul>
             </li>
           </ul>
 
           <div id="container-botao-sair" class="pt-3 border-top border-secondary border-opacity-25">
-            <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2" href="./Login.html">
-              <i class="bi bi-box-arrow-left"></i> Sair
+            <a class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2 py-2" href="../../../index.html">
+              <i class="bi bi-house"></i> Início
             </a>
           </div>
         </div>
@@ -193,7 +194,7 @@
       atualizarEstadoPrioridade();
     });
 
-    function adicionarDisciplina() {
+    async function adicionarDisciplina() {
       const inputNome = document.getElementById("input-nome-disciplina");
       const selectTemPrioridade = document.getElementById("select-tem-prioridade");
       const selectCor = document.getElementById("select-cor-identificacao");
@@ -207,6 +208,24 @@
 
       if (disciplina === "") {
         alert("Por favor, digite o nome da disciplina!");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:8080/materia", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ nome: disciplina })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro ao salvar disciplina (${response.status})`);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Não foi possível salvar a disciplina no backend.");
         return;
       }
 

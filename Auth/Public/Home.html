@@ -1,127 +1,161 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../Home/CSS/Style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">  
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <title>Visão geral</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../Home/CSS/Style.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <title>Visão geral</title>
 </head>
+
 <body>
 
-  <nav class="navbar navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">CRONOS SYSTEM</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+  <nav class="navbar navbar-dark fixed-top shadow-sm navbar-standard">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand fw-bold text-uppercase tracking-wider d-flex align-items-center gap-2" href="./Home.html">
+        CRONOS SYSTEM
+      </a>
+
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">CRONOS SYSTEM</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
+      <div class="offcanvas offcanvas-end text-bg-dark border-0 shadow-lg" tabindex="-1" id="offcanvasDarkNavbar"
+        aria-labelledby="offcanvasDarkNavbarLabel">
+        <div class="offcanvas-header border-bottom border-secondary border-opacity-25 px-4 py-3">
+          <h5 class="offcanvas-title fw-bold text-uppercase d-flex align-items-center gap-2"
+            id="offcanvasDarkNavbarLabel">
+            CRONOS SYSTEM
+          </h5>
+          <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+        <div class="offcanvas-body d-flex flex-column justify-content-between p-4">
+          <ul class="navbar-nav gap-2">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="./Home.html">Home</a>
+              <a class="nav-link active d-flex align-items-center gap-2 px-3 py-2 rounded" aria-current="page"
+                href="./Home.html">
+                <i class="bi bi-house-door"></i> Home
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./professores.html">Professores</a>
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../AddProfessores/html/addProfessores.html">
+                <i class="bi bi-person-badge"></i> Professores
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./Turmas.html">Turmas</a>
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../AddTurma/html/AddTurmas.html">
+                <i class="bi bi-people"></i> Turmas
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Disciplinas</a>
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../AddDisciplinas/html/addDisciplinas.html">
+                <i class="bi bi-book"></i> Disciplinas
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./Planilhas.html">Planilhas</a>
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Planilhas.html">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Planilhas
+              </a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Adicionar
+              <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 rounded" href="#"
+                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-plus-circle"></i> Adicionar
               </a>
-              <ul id="navbar-add" class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="#">Professor</a></li>
-                <li><a class="dropdown-item" href="#">Turma</a></li>
-                <li><a class="dropdown-item" href="./addDisciplinas.html">Diciplina</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
+              <ul id="navbar-add" class="dropdown-menu dropdown-menu-dark border-secondary border-opacity-25 shadow">
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addProfessores.html"><i
+                      class="bi bi-person-plus"></i> Professor</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../AddTurma/html/AddTurmas.html"><i
+                      class="bi bi-people-fill"></i> Turma</a></li>
+                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addDisciplinas.html"><i
+                      class="bi bi-journal-plus"></i> Disciplina</a></li>
               </ul>
-              <li id="exit-event">
-                <a class="dropdown-item" href="#"> <i id="exit" class="bi bi-box-arrow-left"></i> sair</a>
-              </li>
             </li>
           </ul>
+
+          <div id="exit-event" class="pt-3 border-top border-secondary border-opacity-25">
+            <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+              href="../../index.html">
+              <i id="exit" class="bi bi-house"></i> Início
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </nav>
 
-    <main class="page">
-        <div class="visao-geral">
-            <div>
-                <h1>Visão geral</h1>
-                <p>Cadastre os dados essenciais e monte a grade escolar sem informações desnecessárias.</p>
-            </div>
-            <div class="actions">
-              <a class="btn btn-outline" href="Disponibilidade.html">Disponibilidade</a>
-              <a class="btn btn-primary" href="Horarios.html">Montar horário</a>
-            </div>
-        </div>
-        
-        <div class="stats">
-            <div class="stat"><small>Professores</small><strong id="statProf">0</strong></div>
-            <div class="stat"><small>Disciplinas</small><strong id="statDisc">0</strong></div>
-            <div class="stat"><small>Turmas</small><strong id="statTurma">0</strong></div>
-            <div class="stat"><small>Aulas cadastradas</small><strong id="statHor">0</strong></div>
-        </div>
+  <main class="page">
+    <div class="visao-geral">
+      <div>
+        <h1>Visão geral</h1>
+        <p>Cadastre os dados essenciais e monte a grade escolar sem informações desnecessárias.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-outline" href="./Planilhas.html">Planilhas</a>
+        <a class="btn btn-primary" href="../AddTurma/html/AddTurmas.html">Adicionar turma</a>
+      </div>
+    </div>
 
+    <div class="stats">
+      <div class="stat"><small>Professores</small><strong id="statProf">0</strong></div>
+      <div class="stat"><small>Disciplinas</small><strong id="statDisc">0</strong></div>
+      <div class="stat"><small>Turmas</small><strong id="statTurma">0</strong></div>
+      <div class="stat"><small>Aulas cadastradas</small><strong id="statHor">0</strong></div>
+    </div>
+
+    <div class="grid grid-2">
+      <section class="card">
+        <div class="section-title">
+          <div>
+            <h2>Dados da escola</h2>
+            <p class="sub">Apenas o que aparece no cabeçalho da grade.</p>
+          </div><button class="btn btn-primary">Salvar</button>
+        </div>
         <div class="grid grid-2">
-            <section class="card">
-                <div class="section-title">
-                    <div>
-                        <h2>Dados da escola</h2>
-                        <p class="sub">Apenas o que aparece no cabeçalho da grade.</p>
-                    </div><button class="btn btn-primary">Salvar</button>
-                </div>
-                <div class="grid grid-2">
-                    <div class="field"><label for="school">Escola</label><input id="school"
-                            placeholder="ETEC Cidade do Livro"></div>
-                    <div class="field"><label for="semester">Semestre</label><input id="semester"
-                            placeholder="2º Semestre de 2026"></div>
-                    <div class="field"><label for="shift">Turno principal</label><select id="shift">
-                            <option>Diurno</option>
-                            <option>Noturno</option>
-                            <option>Integral</option>
-                        </select></div>
-                    <div class="field"><label for="coordination">Coordenação</label><input id="coordination"
-                            placeholder="Responsável"></div>
-                </div>
-            </section>
-            <section class="card">
-                <div class="section-title">
-                    <div>
-                        <h2>Dias letivos</h2>
-                        <p class="sub">Selecione os dias utilizados na grade.</p>
-                    </div>
-                </div>
-                <div class="pills"><button class="pill day-pill" data-day="Segunda">Segunda</button><button
-                        class="pill day-pill" data-day="Terça">Terça</button><button class="pill day-pill"
-                        data-day="Quarta">Quarta</button><button class="pill day-pill"
-                        data-day="Quinta">Quinta</button><button class="pill day-pill" data-day="Sexta">Sexta</button>
-                </div>
-                <div class="note" style="margin-top:14px">Os horários da grade usam os blocos de aula e intervalo do
-                    padrão da planilha. A disponibilidade usa os horários oficiais por período.</div>
-            </section>
+          <div class="field"><label for="school">Escola</label><input id="school" placeholder="ETEC Cidade do Livro">
+          </div>
+          <div class="field"><label for="semester">Semestre</label><input id="semester"
+              placeholder="2º Semestre de 2026"></div>
+          <div class="field"><label for="shift">Turno principal</label><select id="shift">
+              <option>Diurno</option>
+              <option>Noturno</option>
+              <option>Integral</option>
+            </select></div>
+          <div class="field"><label for="coordination">Coordenação</label><input id="coordination"
+              placeholder="Responsável"></div>
         </div>
-    </main>
+      </section>
+      <section class="card">
+        <div class="section-title">
+          <div>
+            <h2>Dias letivos</h2>
+            <p class="sub">Selecione os dias utilizados na grade.</p>
+          </div>
+        </div>
+        <div class="pills"><button class="pill day-pill" data-day="Segunda">Segunda</button><button
+            class="pill day-pill" data-day="Terça">Terça</button><button class="pill day-pill"
+            data-day="Quarta">Quarta</button><button class="pill day-pill" data-day="Quinta">Quinta</button><button
+            class="pill day-pill" data-day="Sexta">Sexta</button>
+        </div>
+        <div class="note" style="margin-top:14px">Os horários da grade usam os blocos de aula e intervalo do
+          padrão da planilha. A disponibilidade usa os horários oficiais por período.</div>
+      </section>
+    </div>
+  </main>
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-      <script src="../Home/JS/ButtonSemana.js"></script>
-      <script src="../CORS/cors.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+  </script>
+  <script src="../Home/js/home.js"></script>
+
 </body>
+
 </html>
