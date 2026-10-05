@@ -1,0 +1,38 @@
+SISTEMA DE HORAS - RELATÓRIO DE CORREÇÕES
+
+Correções aplicadas:
+
+1. FRONTEND
+- Corrigidos caminhos de CSS e JavaScript que apontavam para pastas com nome/capitalização incorretos.
+- Corrigidos imports CSS de Partials (Container, Format, Nav etc.).
+- Corrigido o import do checklist do Login, incluindo a extensão .js.
+- Corrigido o import do timer da recuperação de senha.
+- Removido o carregamento duplicado do script de recuperação de senha.
+- Corrigido o script de Cadastro para ser carregado como módulo, pois ele usa import.
+- Corrigido o uso de IDs duplicados no formulário de Cadastro.
+- Adicionado id ao campo de e-mail e id separado para confirmação de senha.
+- Melhorada a validação de usuário, e-mail, senha e confirmação de senha.
+- Corrigida a navegação entre Home.html e Turmas.html respeitando a capitalização real dos arquivos.
+- Corrigido o import ButtonAdd.css na página de Turmas.
+
+2. BACKEND CRONOSYSTEM
+- Corrigada a sintaxe de @JoinColumn em DispProf.java.
+- Corrigido o nome do atributo da entidade Materia para ficar compatível com a coluna nome do banco.
+- Corrigido o script Flyway V0001: removidas vírgulas finais inválidas, adicionados AUTO_INCREMENT e tipos compatíveis com Long.
+- Corrigidas referências e relacionamentos das tabelas do banco.
+- Evitado o uso de ENUM MySQL com valores diferentes dos nomes reais dos enums Java; o banco usa VARCHAR para esses campos.
+
+3. BACKEND SISTEMA CADASTRAMENTO
+- Corrigido o construtor quebrado de UsuarioService.
+- Corrigido o banco Flyway: a entidade Usuario usa a tabela usuario, mas a migração antiga criava dados_senhas. Isso foi alinhado.
+- Corrigado o INSERT da migração V0002 para a tabela correta.
+- Incluído o arquivo de configuração do Maven Wrapper que estava ausente nesse backend.
+
+VALIDAÇÕES REALIZADAS
+- Todos os arquivos JavaScript passaram por node --check.
+- Foi feita uma varredura de referências relativas de HTML/CSS e não sobraram arquivos referenciados inexistentes.
+- O Maven não pôde ser executado completamente neste ambiente porque os wrappers precisariam baixar o Maven da internet; a tentativa de download falhou por indisponibilidade de acesso ao repositório.
+- A checagem direta com javac confirmou que não há mais o erro de sintaxe do construtor/conteúdo Java identificado anteriormente; as falhas restantes da compilação direta são apenas dependências externas do Spring/Jakarta/Lombok que não estão no classpath dessa checagem.
+
+OBSERVAÇÃO
+O projeto ainda contém dois backends separados (cronosystem e SistemaCadastramento). Eles não foram fundidos, porque isso mudaria a arquitetura original do projeto. Também não foi inventada uma integração entre o frontend e uma API que não existia no código enviado.
