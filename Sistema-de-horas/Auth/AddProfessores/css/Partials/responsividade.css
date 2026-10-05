@@ -1,0 +1,63 @@
+@media print {
+  .barra-aplicativo-topo,
+  .botoes-acao,
+  .barra-ferramentas,
+  .cartao-personalizado:not(.area-impressao),
+  .estatisticas-dashboard,
+  .ocultar-na-impressao {
+      display: none !important;
+  }
+
+  .pagina-conteudo {
+      padding: 0;
+  }
+
+  .area-impressao {
+      box-shadow: none;
+      border: 0;
+  }
+
+  .titulo-impressao {
+      display: block;
+  }
+
+  .container-cronograma {
+      overflow: visible;
+      border: 1px solid #111;
+  }
+
+  .tabela-cronograma {
+      min-width: 0;
+  }
+
+  .tabela-cronograma .materia-celula {
+      height: auto;
+  }
+}
+@media(max-width:1000px) {
+  .grade-2-colunas,
+  .grade-3-colunas,
+  .grade-4-colunas {
+      grid-template-columns: 1fr;
+  }
+
+  .sessao-hero-principal {
+      align-items: flex-start;
+      flex-direction: column;
+  }
+
+  .barra-aplicativo-interna {
+      align-items: flex-start;
+      flex-wrap: wrap;
+  }
+}
+
+@media(max-width:760px) {
+  .layout-autenticacao {
+      grid-template-columns: 1fr;
+  }
+  .marca-autenticacao,
+  .formulario-autenticacao {
+      padding: 26px;
+  }
+}

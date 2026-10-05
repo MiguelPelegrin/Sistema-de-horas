@@ -1,0 +1,20 @@
+:root {
+  --cor-vermelho-primario: #a3130d;
+  --cor-vermelho-escuro: #7d0d09;
+  --cor-azul-marinho: #071568;
+  --cor-azul-marinho-escuro: #0d1d82;
+  --cor-amarelo-destaque: #fff200;
+  --cor-azul-suave: #d7e5f2;
+
+  --cor-fundo-tela: #f4f6f9;
+  --cor-fundo-cartao: #fff;
+  --cor-texto-principal: #1e2733;
+  --cor-texto-secundario: #6d7580; 
+  --cor-borda-padrao: #dce1e7;
+
+  --cor-status-sucesso: #1d6f42;
+  --cor-status-erro: #b42318;    
+  
+  --sombra-padrao-cartao: 0 8px 22px rgba(12, 24, 52, .07);
+  --borda-arredondada-padrao: 14px;
+}
