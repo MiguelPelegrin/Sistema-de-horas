@@ -1,5 +1,0 @@
-@import url(./variaveis.css);
-body {
-    background-color: var(--cor-fundo-pagina);
-    color: var(--cor-texto);
-  }

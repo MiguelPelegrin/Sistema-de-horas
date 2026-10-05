@@ -36,3 +36,14 @@ VALIDAÇÕES REALIZADAS
 
 OBSERVAÇÃO
 O projeto ainda contém dois backends separados (cronosystem e SistemaCadastramento). Eles não foram fundidos, porque isso mudaria a arquitetura original do projeto. Também não foi inventada uma integração entre o frontend e uma API que não existia no código enviado.
+
+ATUALIZAÇÃO DE INTERFACE - 05/10/2026
+- Home: botões de Dias letivos agora são clicáveis, alternam estado e mantêm a seleção no navegador.
+- Home: removida a descrição sobre blocos de aula e horários oficiais por período.
+- Professores: separadas as páginas de cadastro e de professores cadastrados.
+- Disciplinas: separadas as páginas de cadastro e de disciplinas cadastradas.
+- Turmas: separadas as páginas de cadastro e de turmas cadastradas.
+- As páginas de cadastro deixaram de carregar listas de registros.
+- As páginas de listagem receberam consulta ao backend e exclusão de registros.
+- Menu principal atualizado para abrir as páginas de cadastrados; o menu "Adicionar" continua levando aos formulários.
+- Mantidos redirecionamentos de compatibilidade para os antigos arquivos públicos de cadastro.

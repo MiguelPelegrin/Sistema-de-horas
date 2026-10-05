@@ -7,6 +7,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalTime;
+
 
 @Data
 @Entity
@@ -24,6 +26,12 @@ public class Horario {
 
     @PositiveOrZero
     private Integer tempo_aula;
+
+    @Column(name = "hora_inicio")
+    private LocalTime horaInicio;
+
+    @Column(name = "hora_fim")
+    private LocalTime horaFim;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "turmasep")

@@ -6,5 +6,5 @@ import com.cronos.cronosystem.repository.DispProf.DispProfRepositoryQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DispProfRepository extends JpaRepository<DispProf, Long>, DispProfRepositoryQuery {
-
+    boolean existsByProf_IdAndHorario_Id(Long profId, Long horarioId);
 }

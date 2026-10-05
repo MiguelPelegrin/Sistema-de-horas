@@ -46,17 +46,17 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddProfessores/html/addProfessores.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/professores.html">
                 <i class="bi bi-person-badge"></i> Professores
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddTurma/html/AddTurmas.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/Turmas.html">
                 <i class="bi bi-people"></i> Turmas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./addDisciplinas.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/disciplinas.html">
                 <i class="bi bi-book"></i> Disciplinas
               </a>
             </li>
@@ -146,10 +146,7 @@
       </div>
     </section>
 
-    <section class="cartao-personalizado mt-4">
-      <h3>Disciplinas cadastradas</h3>
-      <div id="lista-disciplinas-cadastradas" class="mt-3"></div>
-    </section>
+
   </main>
 
   <!-- BOOTSTRAP JS -->
@@ -157,109 +154,30 @@
 
   <!-- LÓGICA JAVASCRIPT -->
   <script>
-    const mapaCores = {
-      Azul: { bg: "#0d6efd", text: "#ffffff" },
-      Rosa: { bg: "#d63384", text: "#ffffff" },
-      Amarelo: { bg: "#ffc107", text: "#000000" },
-      Verde: { bg: "#198754", text: "#ffffff" },
-      Vermelho: { bg: "#dc3545", text: "#ffffff" },
-      Roxo: { bg: "#6f42c1", text: "#ffffff" },
-      Laranja: { bg: "#fd7e14", text: "#ffffff" },
-      Cinza: { bg: "#6c757d", text: "#ffffff" },
-      Ciano: { bg: "#0dcaf0", text: "#000000" },
-      Marrom: { bg: "#795548", text: "#ffffff" },
-    };
+    const selectTemPrioridade = document.getElementById("select-tem-prioridade");
+    const selectQualPrioridade = document.getElementById("select-qual-prioridade");
+    const opcaoSemPrioridade = selectQualPrioridade.querySelector('option[value="Sem prioridade"]');
 
-    async function carregarDisciplinas() {
-      const lista = document.getElementById("lista-disciplinas-cadastradas");
-      if (!lista) return;
-
-      try {
-        const response = await fetch("http://localhost:8080/materia");
-        if (!response.ok) throw new Error(`Erro ao buscar disciplinas (${response.status})`);
-
-        const disciplinas = await response.json();
-        lista.replaceChildren();
-
-        if (disciplinas.length === 0) {
-          lista.textContent = "Nenhuma disciplina cadastrada.";
-          return;
-        }
-
-        disciplinas.forEach(disciplina => {
-          const item = document.createElement("div");
-          item.className = "border rounded p-3 mb-2 bg-light d-flex justify-content-between align-items-center gap-3";
-
-          const texto = document.createElement("span");
-          texto.textContent = disciplina.nome;
-
-          const botao = document.createElement("button");
-          botao.type = "button";
-          botao.className = "btn btn-outline-danger btn-sm";
-          botao.textContent = "Apagar";
-          botao.addEventListener("click", () => apagarDisciplina(disciplina.id, disciplina.nome));
-
-          item.append(texto, botao);
-          lista.appendChild(item);
-        });
-      } catch (error) {
-        console.error(error);
-        lista.textContent = "Não foi possível carregar as disciplinas cadastradas.";
+    function atualizarEstadoPrioridade() {
+      const semPrioridade = selectTemPrioridade.value === "Não";
+      selectQualPrioridade.disabled = semPrioridade;
+      opcaoSemPrioridade.disabled = !semPrioridade;
+      opcaoSemPrioridade.hidden = !semPrioridade;
+      if (semPrioridade) {
+        selectQualPrioridade.value = "Sem prioridade";
+      } else if (selectQualPrioridade.value === "Sem prioridade") {
+        selectQualPrioridade.selectedIndex = 1;
       }
     }
 
-    async function apagarDisciplina(id, nome) {
-      if (!confirm(`Deseja apagar a disciplina "${nome}"?`)) return;
-
-      try {
-        const response = await fetch(`http://localhost:8080/materia/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error(`Erro ao apagar disciplina (${response.status})`);
-        await carregarDisciplinas();
-      } catch (error) {
-        console.error(error);
-        alert("Não foi possível apagar a disciplina.");
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      carregarDisciplinas();
-      const selectTemPrioridade = document.getElementById("select-tem-prioridade");
-      const selectQualPrioridade = document.getElementById("select-qual-prioridade");
-      const opcaoSemPrioridade = selectQualPrioridade.querySelector('option[value="Sem prioridade"]');
-
-      function atualizarEstadoPrioridade() {
-        if (selectTemPrioridade.value === "Não") {
-          opcaoSemPrioridade.disabled = false;
-          opcaoSemPrioridade.hidden = false;
-          selectQualPrioridade.value = "Sem prioridade";
-          selectQualPrioridade.disabled = true;
-        } else {
-          selectQualPrioridade.disabled = false;
-          opcaoSemPrioridade.disabled = true;
-          opcaoSemPrioridade.hidden = true;
-
-          if (selectQualPrioridade.value === "Sem prioridade") {
-            selectQualPrioridade.selectedIndex = 1;
-          }
-        }
-      }
-
-      selectTemPrioridade.addEventListener("change", atualizarEstadoPrioridade);
-      atualizarEstadoPrioridade();
-    });
+    selectTemPrioridade.addEventListener("change", atualizarEstadoPrioridade);
+    atualizarEstadoPrioridade();
 
     async function adicionarDisciplina() {
       const inputNome = document.getElementById("input-nome-disciplina");
-      const selectTemPrioridade = document.getElementById("select-tem-prioridade");
-      const selectCor = document.getElementById("select-cor-identificacao");
-      const selectQualPrioridade = document.getElementById("select-qual-prioridade");
-
       const disciplina = inputNome.value.trim();
-      const temPrioridade = selectTemPrioridade.value;
-      const corNome = selectCor.value;
-      const qualPrioridade = selectQualPrioridade.disabled ? "Sem prioridade" : selectQualPrioridade.value;
 
-      if (disciplina === "") {
+      if (!disciplina) {
         alert("Por favor, digite o nome da disciplina!");
         return;
       }
@@ -267,30 +185,20 @@
       try {
         const response = await fetch("http://localhost:8080/materia", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nome: disciplina })
         });
 
-        if (!response.ok) {
-          throw new Error(`Erro ao salvar disciplina (${response.status})`);
-        }
+        if (!response.ok) throw new Error(`Erro ${response.status}`);
+        alert("Disciplina cadastrada com sucesso!");
+        inputNome.value = "";
+        selectTemPrioridade.value = "Sim";
+        atualizarEstadoPrioridade();
       } catch (error) {
         console.error(error);
         alert("Não foi possível salvar a disciplina no backend.");
-        return;
       }
-
-      carregarDisciplinas();
-
-      // Reseta o formulário
-      inputNome.value = "";
-      selectTemPrioridade.value = "Sim";
-      selectQualPrioridade.disabled = false;
-      selectQualPrioridade.selectedIndex = 1;
     }
-
   </script>
 </body>
 </html>
