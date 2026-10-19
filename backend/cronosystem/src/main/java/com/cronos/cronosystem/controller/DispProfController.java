@@ -1,6 +1,7 @@
 package com.cronos.cronosystem.controller;
 
 import com.cronos.cronosystem.service.DispProfService;
+import com.cronos.cronosystem.dto.DisponibilidadeProfDto;
 import com.cronos.cronosystem.model.DispProf;
 import com.cronos.cronosystem.repository.DispProfRepository;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +38,13 @@ public class DispProfController {
     @PostMapping
     public DispProf add(@RequestBody DispProf model) {
         return service.salvar(model);
+    }
+
+    @PostMapping("/professor/{profId}")
+    public List<DispProf> adicionarDisponibilidade(
+            @PathVariable Long profId,
+            @RequestBody List<DisponibilidadeProfDto> disponibilidades) {
+        return service.salvarDisponibilidade(profId, disponibilidades);
     }
 
     @DeleteMapping("/{id}")

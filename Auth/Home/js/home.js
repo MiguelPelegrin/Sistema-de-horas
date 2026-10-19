@@ -3,6 +3,7 @@ const API_BASE_URL = 'http://localhost:8080';
 document.addEventListener('DOMContentLoaded', () => {
     carregarEstatisticas();
     configurarBotaoSalvar();
+    configurarDiasLetivos();
 });
 
 function carregarEstatisticas() {
@@ -52,4 +53,48 @@ function configurarBotaoSalvar() {
                 });
         });
     }
+}
+
+
+function configurarDiasLetivos() {
+    const botoes = document.querySelectorAll(".day-pill");
+    if (!botoes.length) return;
+
+    let diasSelecionados;
+    try {
+        diasSelecionados = JSON.parse(localStorage.getItem("cronos_dias_letivos") || "null");
+    } catch (error) {
+        diasSelecionados = null;
+    }
+
+    if (!Array.isArray(diasSelecionados) || diasSelecionados.length === 0) {
+        diasSelecionados = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
+    }
+
+    const atualizar = () => {
+        botoes.forEach(botao => {
+            const ativo = diasSelecionados.includes(botao.dataset.day);
+            botao.classList.toggle("active", ativo);
+            botao.setAttribute("aria-pressed", String(ativo));
+        });
+        localStorage.setItem("cronos_dias_letivos", JSON.stringify(diasSelecionados));
+    };
+
+    botoes.forEach(botao => {
+        botao.addEventListener("click", () => {
+            const dia = botao.dataset.day;
+            if (diasSelecionados.includes(dia)) {
+                if (diasSelecionados.length === 1) {
+                    alert("Pelo menos um dia letivo precisa permanecer selecionado.");
+                    return;
+                }
+                diasSelecionados = diasSelecionados.filter(item => item !== dia);
+            } else {
+                diasSelecionados.push(dia);
+            }
+            atualizar();
+        });
+    });
+
+    atualizar();
 }

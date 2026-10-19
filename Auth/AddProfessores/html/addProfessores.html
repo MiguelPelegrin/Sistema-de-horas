@@ -45,17 +45,17 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./addProfessores.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/professores.html">
                 <i class="bi bi-person-badge"></i> Professores
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddTurma/html/AddTurmas.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/Turmas.html">
                 <i class="bi bi-people"></i> Turmas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../AddDisciplinas/html/addDisciplinas.html">
+              <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/disciplinas.html">
                 <i class="bi bi-book"></i> Disciplinas
               </a>
             </li>
@@ -144,42 +144,52 @@
       </div>
     </div>
 
-    <!-- SEÇÃO DE DISPONIBILIDADE -->
-    <div class="row mt-3 g-2">
-      <div class="col-12">
-        <label class="form-label d-block">Períodos disponíveis:</label>
-      </div>
-      
-      <div class="col-md-4">
-        <input type="checkbox" class="btn-check" id="checkbox-disp-manha" value="Manha" autocomplete="off">
-        <label class="btn btn-outline-primary w-100 py-2" for="checkbox-disp-manha">
-          <i class="bi bi-sunrise me-1"></i> Manhã 07:00 - 12:30
-        </label>
-      </div>
-
-      <div class="col-md-4">
-        <input type="checkbox" class="btn-check" id="checkbox-disp-tarde" value="Tarde" autocomplete="off">
-        <label class="btn btn-outline-primary w-100 py-2" for="checkbox-disp-tarde">
-          <i class="bi bi-sun me-1"></i> Tarde 12:30 - 15:10
-        </label>
+    <section class="disponibilidade-professor mt-4" aria-labelledby="titulo-disponibilidade">
+      <div class="disponibilidade-cabecalho">
+        <div>
+          <h3 id="titulo-disponibilidade" class="mb-1">Disponibilidade do professor</h3>
+          <p class="text-muted mb-0">Clique nos blocos em que o professor pode ministrar aulas.</p>
+        </div>
+        <div class="disponibilidade-acoes">
+          <span id="contador-disponibilidade" class="disponibilidade-contador">0 horários selecionados</span>
+          <button type="button" id="btn-limpar-disponibilidade" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-eraser me-1"></i> Limpar
+          </button>
+        </div>
       </div>
 
-      <div class="col-md-4">
-        <input type="checkbox" class="btn-check" id="checkbox-disp-noite" value="Noite" autocomplete="off">
-        <label class="btn btn-outline-primary w-100 py-2" for="checkbox-disp-noite">
-          <i class="bi bi-moon-stars me-1"></i> Noite 19:00 - 22:50
-        </label>
+      <div class="disponibilidade-legenda" aria-label="Legenda da tabela">
+        <span><span class="legenda-bloco legenda-disponivel"></span> Disponível</span>
+        <span><span class="legenda-bloco legenda-selecionado"></span> Selecionado</span>
+        <span><i class="bi bi-info-circle me-1"></i> Máximo de 8 aulas por dia</span>
       </div>
-    </div>
+
+      <div class="tabela-disponibilidade-wrap">
+        <table class="tabela-disponibilidade">
+          <thead>
+            <tr>
+              <th scope="col" class="coluna-horario">Horário</th>
+              <th scope="col">Segunda</th>
+              <th scope="col">Terça</th>
+              <th scope="col">Quarta</th>
+              <th scope="col">Quinta</th>
+              <th scope="col">Sexta</th>
+              <th scope="col">Sábado</th>
+            </tr>
+          </thead>
+          <tbody id="corpo-tabela-disponibilidade"></tbody>
+        </table>
+      </div>
+
+      <input type="hidden" id="input-disponibilidade-professor" name="disponibilidade-professor" value="[]">
+      <p id="mensagem-disponibilidade" class="mensagem-disponibilidade mb-0" role="status"></p>
+    </section>
 
     <div class="my-4">
       <button onclick="salvarDadosProfessor()" class="btn btn-primary btn-lg">Salvar informações</button>
     </div>
 
-    <section class="cartao-personalizado mt-4">
-      <h3>Professores cadastrados</h3>
-      <div id="lista-professores" class="mt-3"></div>
-    </section>
+
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

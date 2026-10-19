@@ -1,8 +1,8 @@
 CREATE TABLE escola (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(225),
-    coordenacao VARCHAR(255),
-),
+    coordenacao VARCHAR(255)
+);
 
 CREATE TABLE materia (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -34,6 +34,8 @@ CREATE TABLE horario (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     dia_semana VARCHAR(20),
     tempo_aula INT DEFAULT 50,
+    hora_inicio TIME,
+    hora_fim TIME,
     turmasep VARCHAR(20)
 );
 
@@ -67,16 +69,24 @@ CREATE TABLE disp_prof (
     CONSTRAINT fk_disp_prof_horario FOREIGN KEY (id_horario) REFERENCES horario(id)
 );
 
-CREATE TABLE labs(
+CREATE TABLE labs (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(225)
 );
 
-CREATE disp_lab(
+CREATE TABLE disp_lab (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+<<<<<<< HEAD
     horario varchar(20),
     dia_semana varchar(20),
     id_materia BIGINT,
 
     CONSTRAINT fk_materia_disp_lab FOREIGN KEY(id_materia) REFERENCES materia(id)
 );
+=======
+    horario VARCHAR(20),
+    dia_semana VARCHAR(20),
+    id_materia BIGINT,
+    CONSTRAINT fk_materia_disp_lab FOREIGN KEY(id_materia) REFERENCES materia(id)
+);
+>>>>>>> 4924645349a55d0560c6f21c3105f99f822e3328
