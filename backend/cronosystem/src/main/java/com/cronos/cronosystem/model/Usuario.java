@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @Data
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -27,4 +29,8 @@ public class Usuario {
     @NotNull
     @Column(name = "admin")
     private Boolean admin = false;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns =  @JoinColumn(name = "id_permissao"))
+    private List<Permissao> permissao;
 }
