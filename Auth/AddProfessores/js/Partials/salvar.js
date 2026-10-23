@@ -1,39 +1,72 @@
+let salvandoProfessor = false;
+
 window.salvarDadosProfessor = async function() {
   const nome = document.getElementById("input-nome-professor")?.value.trim();
   const sobrenome = document.getElementById("input-sobrenome-professor")?.value.trim();
   const cargaHoraria = document.getElementById("input-carga-horaria")?.value;
+  const botao = document.getElementById("btn-salvar-professor");
+
+  if (salvandoProfessor) return;
 
   if (!nome || !sobrenome) {
     alert("Preencha o nome e o sobrenome do professor.");
     return;
   }
 
-  if (cargaHoraria === "" || Number(cargaHoraria) < 0) {
-    alert("Informe uma carga horária máxima válida.");
+  if (`${nome} ${sobrenome}`.length > 255) {
+    alert("O nome completo do professor pode ter no máximo 255 caracteres.");
     return;
   }
 
+  const carga = Number(cargaHoraria);
+
+  if (cargaHoraria === "" || !Number.isInteger(carga) || carga < 0 || carga > 65) {
+    alert("Informe uma carga horária máxima entre 0 e 65 aulas por semana.");
+    return;
+  }
+
+  salvandoProfessor = true;
+  if (botao) botao.disabled = true;
+
   try {
-    const response = await fetch("http://localhost:8080/prof", {
+    const response = await apiFetch("/prof", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         nome: `${nome} ${sobrenome}`,
-        chm: Number(cargaHoraria)
+        chm: carga
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao salvar professor (${response.status})`);
+      throw new Error(await lerMensagemErro(response, `Erro ao salvar professor (${response.status})`));
     }
 
     const professorSalvo = await response.json();
+    const disciplinas = window.obterDisciplinasProfessor?.() || [];
     const disponibilidade = window.obterDisponibilidadeProfessor?.() || [];
 
+    for (const materiaId of disciplinas) {
+      const respostaDisciplina = await apiFetch("/materia-prof", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          prof: { id: professorSalvo.id },
+          materia: { id: materiaId }
+        })
+      });
+
+      if (!respostaDisciplina.ok) {
+        throw new Error(`Professor salvo, mas as disciplinas não foram vinculadas (${respostaDisciplina.status})`);
+      }
+    }
+
     if (professorSalvo.id && disponibilidade.length > 0) {
-      const respostaDisponibilidade = await fetch(`http://localhost:8080/disp-prof/professor/${professorSalvo.id}`, {
+      const respostaDisponibilidade = await apiFetch(`/disp-prof/professor/${professorSalvo.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -58,6 +91,9 @@ window.salvarDadosProfessor = async function() {
     window.limparDisponibilidadeProfessor?.();
   } catch (error) {
     console.error(error);
-    alert("Não foi possível salvar o professor no backend.");
+    alert(error.message || "Não foi possível salvar o professor no backend.");
+  } finally {
+    salvandoProfessor = false;
+    if (botao) botao.disabled = false;
   }
 };

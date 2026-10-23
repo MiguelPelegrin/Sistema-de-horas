@@ -1,10 +1,10 @@
 package com.cronos.cronosystem.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 
 @Data
 @Entity
@@ -16,8 +16,20 @@ public class Escola {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank
+    @Size(max = 225)
     private String nome;
 
+    @Size(max = 255)
     private String coordenacao;
+
+    @Size(max = 100)
+    private String semestre;
+
+    @Size(max = 50)
+    private String turno;
+
+    @Size(max = 100)
+    @Column(name = "dias_letivos")
+    private String diasLetivos;
 }

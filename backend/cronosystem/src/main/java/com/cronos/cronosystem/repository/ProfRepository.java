@@ -5,5 +5,13 @@ import com.cronos.cronosystem.model.Prof;
 import com.cronos.cronosystem.repository.Prof.ProfRepositoryQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface ProfRepository extends JpaRepository<Prof, Long>, ProfRepositoryQuery {
+    List<Prof> findByEscola_IdOrderByNome(Long escolaId);
+
+    Optional<Prof> findByIdAndEscola_Id(Long id, Long escolaId);
+
+    long countByEscola_Id(Long escolaId);
 }

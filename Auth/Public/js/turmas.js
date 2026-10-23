@@ -1,7 +1,6 @@
-const API_BASE_URL = "http://localhost:8080";
-
 const nomesTurno = {
   MANHA: "Manhã",
+  TARDE: "Tarde",
   NOITE: "Noite",
   INTEGRAL: "Integral"
 };
@@ -11,7 +10,7 @@ async function carregarTurmas() {
   if (!lista) return;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/turma`);
+    const response = await apiFetch("/turma");
     if (!response.ok) throw new Error(`Erro ${response.status}`);
     const turmas = await response.json();
     lista.replaceChildren();
@@ -52,8 +51,11 @@ async function carregarTurmas() {
 async function apagarTurma(id, nome) {
   if (!confirm(`Deseja apagar a turma "${nome}"?`)) return;
   try {
-    const response = await fetch(`${API_BASE_URL}/turma/${id}`, { method: "DELETE" });
-    if (!response.ok) throw new Error(`Erro ${response.status}`);
+    const response = await apiFetch(`/turma/${id}`, { method: "DELETE" });
+    if (!response.ok) {
+      alert(await lerMensagemErro(response, "Não foi possível apagar a turma."));
+      return;
+    }
     await carregarTurmas();
   } catch (error) {
     console.error(error);

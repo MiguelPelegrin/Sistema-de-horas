@@ -7,7 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.cronos.cronosystem.model.enums.DiaSemana;
 
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 public interface HorarioRepository extends JpaRepository<Horario, Long>, HorarioRepositoryQuery {
-    java.util.Optional<Horario> findFirstByDiaSemanaAndHoraInicioAndHoraFim(DiaSemana diaSemana, LocalTime horaInicio, LocalTime horaFim);
+    Optional<Horario> findFirstByDiaSemanaAndHoraInicioAndHoraFimAndEscola_Id(DiaSemana diaSemana, LocalTime horaInicio, LocalTime horaFim, Long escolaId);
+
+    List<Horario> findByEscola_Id(Long escolaId);
+
+    Optional<Horario> findByIdAndEscola_Id(Long id, Long escolaId);
 }

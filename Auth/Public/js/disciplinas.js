@@ -1,11 +1,9 @@
-const API_BASE_URL = "http://localhost:8080";
-
 async function carregarDisciplinas() {
   const lista = document.getElementById("lista-disciplinas");
   if (!lista) return;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/materia`);
+    const response = await apiFetch("/materia");
     if (!response.ok) throw new Error(`Erro ${response.status}`);
     const disciplinas = await response.json();
     lista.replaceChildren();
@@ -41,8 +39,11 @@ async function carregarDisciplinas() {
 async function apagarDisciplina(id, nome) {
   if (!confirm(`Deseja apagar a disciplina "${nome}"?`)) return;
   try {
-    const response = await fetch(`${API_BASE_URL}/materia/${id}`, { method: "DELETE" });
-    if (!response.ok) throw new Error(`Erro ${response.status}`);
+    const response = await apiFetch(`/materia/${id}`, { method: "DELETE" });
+    if (!response.ok) {
+      alert(await lerMensagemErro(response, "Não foi possível apagar a disciplina."));
+      return;
+    }
     await carregarDisciplinas();
   } catch (error) {
     console.error(error);

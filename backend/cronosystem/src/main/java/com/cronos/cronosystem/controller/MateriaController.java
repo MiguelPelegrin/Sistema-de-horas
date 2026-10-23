@@ -2,7 +2,7 @@ package com.cronos.cronosystem.controller;
 
 import com.cronos.cronosystem.service.MateriaService;
 import com.cronos.cronosystem.model.Materia;
-import com.cronos.cronosystem.repository.MateriaRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,19 +14,16 @@ import java.util.List;
 public class MateriaController {
 
     @Autowired
-    private MateriaRepository repository;
-
-    @Autowired
     private MateriaService service;
 
     @GetMapping
     public List<Materia> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/pornome")
     public List<Materia> pesquisar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/{id}")
@@ -35,7 +32,7 @@ public class MateriaController {
     }
 
     @PostMapping
-    public Materia add(@RequestBody Materia model) {
+    public Materia add(@RequestBody @Valid Materia model) {
         return service.salvar(model);
     }
 
@@ -45,9 +42,9 @@ public class MateriaController {
     }
 
     @PutMapping("/{id}")
-    public Materia atualizar(@PathVariable Long id, @RequestBody Materia model) {
+    public Materia atualizar(@PathVariable Long id, @RequestBody @Valid Materia model) {
         Materia modelAtual = service.buscaroufalhar(id);
-        BeanUtils.copyProperties(model, modelAtual, "id");
+        BeanUtils.copyProperties(model, modelAtual, "id", "escola");
         return service.salvar(modelAtual);
     }
 }

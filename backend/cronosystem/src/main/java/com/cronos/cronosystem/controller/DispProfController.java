@@ -3,7 +3,7 @@ package com.cronos.cronosystem.controller;
 import com.cronos.cronosystem.service.DispProfService;
 import com.cronos.cronosystem.dto.DisponibilidadeProfDto;
 import com.cronos.cronosystem.model.DispProf;
-import com.cronos.cronosystem.repository.DispProfRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,19 +15,16 @@ import java.util.List;
 public class DispProfController {
 
     @Autowired
-    private DispProfRepository repository;
-
-    @Autowired
     private DispProfService service;
 
     @GetMapping
     public List<DispProf> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/pornome")
     public List<DispProf> pesquisar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/{id}")
@@ -36,8 +33,13 @@ public class DispProfController {
     }
 
     @PostMapping
-    public DispProf add(@RequestBody DispProf model) {
+    public DispProf add(@RequestBody @Valid DispProf model) {
         return service.salvar(model);
+    }
+
+    @GetMapping("/professor/{profId}")
+    public List<DispProf> listarPorProfessor(@PathVariable Long profId) {
+        return service.listarPorProfessor(profId);
     }
 
     @PostMapping("/professor/{profId}")
@@ -47,13 +49,20 @@ public class DispProfController {
         return service.salvarDisponibilidade(profId, disponibilidades);
     }
 
+    @PutMapping("/professor/{profId}")
+    public List<DispProf> substituirDisponibilidade(
+            @PathVariable Long profId,
+            @RequestBody List<DisponibilidadeProfDto> disponibilidades) {
+        return service.substituirDisponibilidade(profId, disponibilidades);
+    }
+
     @DeleteMapping("/{id}")
     public void remover(@PathVariable Long id) {
         service.excluir(id);
     }
 
     @PutMapping("/{id}")
-    public DispProf atualizar(@PathVariable Long id, @RequestBody DispProf model) {
+    public DispProf atualizar(@PathVariable Long id, @RequestBody @Valid DispProf model) {
         DispProf modelAtual = service.buscaroufalhar(id);
         BeanUtils.copyProperties(model, modelAtual, "id");
         return service.salvar(modelAtual);

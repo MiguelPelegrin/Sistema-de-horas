@@ -3,23 +3,23 @@ const DIAS = [
   { codigo: "TER", nome: "Terça" },
   { codigo: "QUA", nome: "Quarta" },
   { codigo: "QUI", nome: "Quinta" },
-  { codigo: "SEX", nome: "Sexta" },
-  { codigo: "SAB", nome: "Sábado" }
+  { codigo: "SEX", nome: "Sexta" }
 ];
 
 const HORARIOS = [
-  { inicio: "07:00", fim: "07:50", turno: "Manhã" },
-  { inicio: "07:50", fim: "08:40", turno: "Manhã" },
-  { inicio: "08:40", fim: "09:30", turno: "Manhã" },
+  { inicio: "07:20", fim: "08:10", turno: "Manhã" },
+  { inicio: "08:10", fim: "09:00", turno: "Manhã" },
+  { inicio: "09:00", fim: "09:50", turno: "Manhã" },
   { inicio: "10:05", fim: "10:55", turno: "Manhã" },
   { inicio: "10:55", fim: "11:45", turno: "Manhã" },
   { inicio: "11:45", fim: "12:35", turno: "Manhã" },
   { inicio: "13:30", fim: "14:20", turno: "Tarde" },
   { inicio: "14:20", fim: "15:10", turno: "Tarde" },
+  { inicio: "18:10", fim: "19:00", turno: "Noite" },
   { inicio: "19:00", fim: "19:50", turno: "Noite" },
   { inicio: "19:50", fim: "20:40", turno: "Noite" },
-  { inicio: "20:40", fim: "21:30", turno: "Noite" },
-  { inicio: "21:30", fim: "22:20", turno: "Noite" }
+  { inicio: "21:05", fim: "21:55", turno: "Noite" },
+  { inicio: "21:55", fim: "22:45", turno: "Noite" }
 ];
 
 const LIMITE_AULAS_DIA = 8;

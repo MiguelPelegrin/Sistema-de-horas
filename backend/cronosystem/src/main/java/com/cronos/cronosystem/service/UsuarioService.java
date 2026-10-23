@@ -2,11 +2,12 @@ package com.cronos.cronosystem.service;
 
 import com.cronos.cronosystem.dto.AlterarSenhaDto;
 import com.cronos.cronosystem.dto.UsuarioCadastroDto;
+import com.cronos.cronosystem.exception.RegraNegocioException;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,10 @@ public class UsuarioService {
 
     @Transactional
     public Usuario cadastrar(UsuarioCadastroDto dados){
+        if (repository.existsByEmail(dados.email())) {
+            throw new DataIntegrityViolationException("Já existe um usuário com esse e-mail.");
+        }
+
         Usuario usuario = new Usuario();
         usuario.setNome(dados.nome());
         usuario.setEmail(dados.email());
@@ -40,7 +45,7 @@ public class UsuarioService {
         Usuario usuario = buscaroufalhar(userId);
 
         if (!passwordEncoder.matches(dados.senhaAtual(), usuario.getSenha())) {
-            throw new BadCredentialsException("Senha atual incorreta.");
+            throw new RegraNegocioException("Senha atual incorreta.");
         }
 
         usuario.setSenha(passwordEncoder.encode(dados.novaSenha()));

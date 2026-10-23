@@ -2,7 +2,7 @@ package com.cronos.cronosystem.controller;
 
 import com.cronos.cronosystem.service.ProfService;
 import com.cronos.cronosystem.model.Prof;
-import com.cronos.cronosystem.repository.ProfRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,19 +14,16 @@ import java.util.List;
 public class ProfController {
 
     @Autowired
-    private ProfRepository repository;
-
-    @Autowired
     private ProfService service;
 
     @GetMapping
     public List<Prof> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/pornome")
     public List<Prof> pesquisar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/{id}")
@@ -35,7 +32,7 @@ public class ProfController {
     }
 
     @PostMapping
-    public Prof add(@RequestBody Prof model) {
+    public Prof add(@RequestBody @Valid Prof model) {
         return service.salvar(model);
     }
 
@@ -45,9 +42,9 @@ public class ProfController {
     }
 
     @PutMapping("/{id}")
-    public Prof atualizar(@PathVariable Long id, @RequestBody Prof model) {
+    public Prof atualizar(@PathVariable Long id, @RequestBody @Valid Prof model) {
         Prof modelAtual = service.buscaroufalhar(id);
-        BeanUtils.copyProperties(model, modelAtual, "id");
+        BeanUtils.copyProperties(model, modelAtual, "id", "escola");
         return service.salvar(modelAtual);
     }
 }

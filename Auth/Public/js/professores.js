@@ -1,11 +1,9 @@
-const API_BASE_URL = "http://localhost:8080";
-
 async function carregarProfessores() {
   const lista = document.getElementById("lista-professores");
   if (!lista) return;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/prof`);
+    const response = await apiFetch("/prof");
     if (!response.ok) throw new Error(`Erro ${response.status}`);
     const professores = await response.json();
     lista.replaceChildren();
@@ -46,8 +44,11 @@ async function carregarProfessores() {
 async function apagarProfessor(id, nome) {
   if (!confirm(`Deseja apagar o professor "${nome}"?`)) return;
   try {
-    const response = await fetch(`${API_BASE_URL}/prof/${id}`, { method: "DELETE" });
-    if (!response.ok) throw new Error(`Erro ${response.status}`);
+    const response = await apiFetch(`/prof/${id}`, { method: "DELETE" });
+    if (!response.ok) {
+      alert(await lerMensagemErro(response, "Não foi possível apagar o professor."));
+      return;
+    }
     await carregarProfessores();
   } catch (error) {
     console.error(error);

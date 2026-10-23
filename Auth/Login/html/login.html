@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../../Home/CSS/Style.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../css/Style.css">
+  <title>Entrar - Cronos System</title>
+</head>
+
+<body class="auth-body">
+
+  <main class="auth-shell">
+    <section class="auth-brand">
+      <img src="../../../img/Logo/Logo escrito sem fundo.png" alt="Cronos System">
+      <h1>Bem-vindo</h1>
+      <p>Organize professores, disciplinas e turmas e gere a grade escolar respeitando as regras de horário.</p>
+    </section>
+
+    <section class="auth-form">
+      <h2>Entrar</h2>
+      <p class="sub">Use o e-mail e a senha cadastrados pela administração.</p>
+
+      <form id="form-login" class="d-flex flex-column gap-3" novalidate>
+        <div class="field">
+          <label for="input-email">E-mail</label>
+          <input id="input-email" type="email" placeholder="secretaria@etec.sp.gov.br" autocomplete="username" required>
+        </div>
+
+        <div class="field">
+          <label for="input-senha">Senha</label>
+          <input id="input-senha" type="password" placeholder="Sua senha" autocomplete="current-password" required>
+        </div>
+
+        <p id="mensagem-login" class="mensagem-erro" role="alert"></p>
+
+        <button id="btn-entrar" type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script src="../js/login.js"></script>
+</body>
+
+</html>

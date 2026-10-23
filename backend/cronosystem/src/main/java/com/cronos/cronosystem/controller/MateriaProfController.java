@@ -2,7 +2,7 @@ package com.cronos.cronosystem.controller;
 
 import com.cronos.cronosystem.service.MateriaProfService;
 import com.cronos.cronosystem.model.MateriaProf;
-import com.cronos.cronosystem.repository.MateriaProfRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,19 +14,21 @@ import java.util.List;
 public class MateriaProfController {
 
     @Autowired
-    private MateriaProfRepository repository;
-
-    @Autowired
     private MateriaProfService service;
 
     @GetMapping
     public List<MateriaProf> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/pornome")
     public List<MateriaProf> pesquisar() {
-        return repository.findAll();
+        return service.listar();
+    }
+
+    @GetMapping("/professor/{profId}")
+    public List<MateriaProf> listarPorProfessor(@PathVariable Long profId) {
+        return service.listarPorProfessor(profId);
     }
 
     @GetMapping("/{id}")
@@ -35,7 +37,7 @@ public class MateriaProfController {
     }
 
     @PostMapping
-    public MateriaProf add(@RequestBody MateriaProf model) {
+    public MateriaProf add(@RequestBody @Valid MateriaProf model) {
         return service.salvar(model);
     }
 
@@ -45,7 +47,7 @@ public class MateriaProfController {
     }
 
     @PutMapping("/{id}")
-    public MateriaProf atualizar(@PathVariable Long id, @RequestBody MateriaProf model) {
+    public MateriaProf atualizar(@PathVariable Long id, @RequestBody @Valid MateriaProf model) {
         MateriaProf modelAtual = service.buscaroufalhar(id);
         BeanUtils.copyProperties(model, modelAtual, "id");
         return service.salvar(modelAtual);

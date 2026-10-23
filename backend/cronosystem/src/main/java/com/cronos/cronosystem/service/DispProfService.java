@@ -2,12 +2,12 @@ package com.cronos.cronosystem.service;
 
 import com.cronos.cronosystem.dto.DisponibilidadeProfDto;
 import com.cronos.cronosystem.model.DispProf;
+import com.cronos.cronosystem.model.Escola;
 import com.cronos.cronosystem.model.Horario;
 import com.cronos.cronosystem.model.Prof;
 import com.cronos.cronosystem.model.enums.DiaSemana;
 import com.cronos.cronosystem.repository.DispProfRepository;
 import com.cronos.cronosystem.repository.HorarioRepository;
-import com.cronos.cronosystem.repository.ProfRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,29 +23,45 @@ public class DispProfService {
     private DispProfRepository repository;
 
     @Autowired
-    private ProfRepository profRepository;
+    private ProfService profService;
+
+    @Autowired
+    private HorarioService horarioService;
 
     @Autowired
     private HorarioRepository horarioRepository;
 
+    @Autowired
+    private EscolaService escolaService;
+
+    public List<DispProf> listar() {
+        return repository.findByProf_Escola_Id(escolaService.escolaLogadaId());
+    }
+
+    public List<DispProf> listarPorProfessor(Long profId) {
+        return repository.findByProf_Id(profService.buscaroufalhar(profId).getId());
+    }
+
     public DispProf salvar(DispProf x) {
+        x.setProf(profService.buscaroufalhar(x.getProf().getId()));
+        x.setHorario(horarioService.buscaroufalhar(x.getHorario().getId()));
         return repository.save(x);
     }
 
     public DispProf buscaroufalhar(Long yId){
-        return repository.findById(yId)
+        return repository.findByIdAndProf_Escola_Id(yId, escolaService.escolaLogadaId())
                 .orElseThrow(() -> new EntityNotFoundException("Disponibilidade não encontrada com esse ID."));
     }
 
     @Transactional
     public void excluir(Long yId){
-        repository.deleteById(yId);
+        repository.delete(buscaroufalhar(yId));
     }
 
     @Transactional
     public List<DispProf> salvarDisponibilidade(Long profId, List<DisponibilidadeProfDto> disponibilidades) {
-        Prof prof = profRepository.findById(profId)
-                .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado com esse ID."));
+        Prof prof = profService.buscaroufalhar(profId);
+        Escola escola = escolaService.escolaLogada();
 
         List<DispProf> salvas = new ArrayList<>();
 
@@ -57,15 +73,17 @@ public class DispProfService {
             DiaSemana diaSemana = DiaSemana.valueOf(item.getDia());
             LocalTime horaInicio = LocalTime.parse(item.getHoraInicio());
             LocalTime horaFim = LocalTime.parse(item.getHoraFim());
+            HorarioService.validarIntervalo(horaInicio, horaFim);
 
             Horario horario = horarioRepository
-                    .findFirstByDiaSemanaAndHoraInicioAndHoraFim(diaSemana, horaInicio, horaFim)
+                    .findFirstByDiaSemanaAndHoraInicioAndHoraFimAndEscola_Id(diaSemana, horaInicio, horaFim, escola.getId())
                     .orElseGet(() -> {
                         Horario novoHorario = new Horario();
                         novoHorario.setDiaSemana(diaSemana);
                         novoHorario.setHoraInicio(horaInicio);
                         novoHorario.setHoraFim(horaFim);
                         novoHorario.setTempo_aula(item.getTempoAula() == null ? 50 : item.getTempoAula());
+                        novoHorario.setEscola(escola);
                         return horarioRepository.save(novoHorario);
                     });
 
@@ -78,5 +96,13 @@ public class DispProfService {
         }
 
         return salvas;
+    }
+
+    @Transactional
+    public List<DispProf> substituirDisponibilidade(Long profId, List<DisponibilidadeProfDto> disponibilidades) {
+        Prof prof = profService.buscaroufalhar(profId);
+        repository.deleteByProf_Id(prof.getId());
+        repository.flush();
+        return salvarDisponibilidade(profId, disponibilidades);
     }
 }

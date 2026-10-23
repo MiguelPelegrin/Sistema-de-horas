@@ -161,6 +161,22 @@ button, input, select, textarea {
   box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.6);
 }
 
+.linha-adicionar {
+  align-items: end;
+}
+
+.lista-itens-turma {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px;
+  min-height: 48px;
+  border: 1px solid var(--cor-borda-padrao);
+  border-radius: 10px;
+  background-color: #f8f9fa;
+}
+
 .linha-informacoes-turma {
   display: flex;
   flex-wrap: wrap;

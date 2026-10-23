@@ -1,1 +1,0 @@
-import Prioridade from './Partials/Prioridade';

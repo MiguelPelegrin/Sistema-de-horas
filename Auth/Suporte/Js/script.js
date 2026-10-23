@@ -1,1 +1,0 @@
-import './Partials/checklist.js'

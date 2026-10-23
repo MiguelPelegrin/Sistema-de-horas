@@ -2,7 +2,7 @@ package com.cronos.cronosystem.controller;
 
 import com.cronos.cronosystem.service.TurmaService;
 import com.cronos.cronosystem.model.Turma;
-import com.cronos.cronosystem.repository.TurmaRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,19 +14,16 @@ import java.util.List;
 public class TurmaController {
 
     @Autowired
-    private TurmaRepository repository;
-
-    @Autowired
     private TurmaService service;
 
     @GetMapping
     public List<Turma> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/pornome")
     public List<Turma> pesquisar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/{id}")
@@ -35,7 +32,7 @@ public class TurmaController {
     }
 
     @PostMapping
-    public Turma add(@RequestBody Turma model) {
+    public Turma add(@RequestBody @Valid Turma model) {
         return service.salvar(model);
     }
 
@@ -45,9 +42,9 @@ public class TurmaController {
     }
 
     @PutMapping("/{id}")
-    public Turma atualizar(@PathVariable Long id, @RequestBody Turma model) {
+    public Turma atualizar(@PathVariable Long id, @RequestBody @Valid Turma model) {
         Turma modelAtual = service.buscaroufalhar(id);
-        BeanUtils.copyProperties(model, modelAtual, "id");
+        BeanUtils.copyProperties(model, modelAtual, "id", "escola");
         return service.salvar(modelAtual);
     }
 }

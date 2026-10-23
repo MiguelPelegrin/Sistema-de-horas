@@ -2,4 +2,12 @@
     .meu-grid {
       grid-template-columns: 1fr;
     }
+
+    .campo-mensagem {
+      grid-row: auto;
+    }
+
+    .caixa-contato {
+      flex-wrap: wrap;
+    }
   }

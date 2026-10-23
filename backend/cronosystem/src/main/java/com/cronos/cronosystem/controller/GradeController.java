@@ -1,32 +1,29 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.model.DispProf;
 import com.cronos.cronosystem.model.Grade;
-import com.cronos.cronosystem.repository.DispProfRepository;
-import com.cronos.cronosystem.repository.GradeRepository;
-import com.cronos.cronosystem.service.DispProfService;
 import com.cronos.cronosystem.service.GradeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/grade")
 public class GradeController {
-    @Autowired
-    private GradeRepository repository;
 
     @Autowired
     private GradeService service;
 
     @GetMapping
     public List<Grade> listar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/pornome")
     public List<Grade> pesquisar() {
-        return repository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/{id}")
@@ -35,7 +32,7 @@ public class GradeController {
     }
 
     @PostMapping
-    public Grade add(@RequestBody Grade model) {
+    public Grade add(@RequestBody @Valid Grade model) {
         return service.salvar(model);
     }
 
@@ -45,9 +42,9 @@ public class GradeController {
     }
 
     @PutMapping("/{id}")
-    public Grade atualizar(@PathVariable Long id, @RequestBody Grade model) {
+    public Grade atualizar(@PathVariable Long id, @RequestBody @Valid Grade model) {
         Grade modelAtual = service.buscaroufalhar(id);
-        BeanUtils.copyProperties(model, modelAtual, "id");
+        BeanUtils.copyProperties(model, modelAtual, "id", "escola");
         return service.salvar(modelAtual);
     }
 }

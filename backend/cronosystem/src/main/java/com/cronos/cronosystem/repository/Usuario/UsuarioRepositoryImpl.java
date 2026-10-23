@@ -32,8 +32,7 @@ public class UsuarioRepositoryImpl implements UsuarioRepositoryQuery {
         criteria.select(builder.construct(UsuarioDto.class,
                 root.get("id"),
                 root.get("nome"),
-                root.get("email"),
-                root.get("senha")
+                root.get("email")
         ));
 
         Predicate[] predicates = criarRestricoes(filter, builder, root);

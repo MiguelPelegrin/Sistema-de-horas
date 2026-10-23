@@ -8,6 +8,7 @@ import com.cronos.cronosystem.repository.filter.UsuarioFilter;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import com.cronos.cronosystem.service.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +44,15 @@ public class UsuarioController {
         return usuarioLogado;
     }
 
+    @SneakyThrows
     @GetMapping("/{id}")
-    public Usuario buscar(@PathVariable Long id) {
+    public Usuario buscar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
+        service.validarDono(id, usuarioLogado);
         return service.buscaroufalhar(id);
     }
 
     @PostMapping
-    public Usuario add(@RequestBody UsuarioCadastroDto dados) {
+    public Usuario add(@RequestBody @Valid UsuarioCadastroDto dados) {
         return service.cadastrar(dados);
     }
 
@@ -66,13 +69,13 @@ public class UsuarioController {
                              @AuthenticationPrincipal Usuario usuarioLogado) {
         service.validarDono(id, usuarioLogado);
         Usuario modelAtual = service.buscaroufalhar(id);
-        BeanUtils.copyProperties(model, modelAtual, "id", "senha", "plano", "admin");
+        BeanUtils.copyProperties(model, modelAtual, "id", "senha", "plano", "admin", "escola", "permissao");
         return service.salvar(modelAtual);
     }
 
     @SneakyThrows
     @PutMapping("/{id}/senha")
-    public Usuario alterarSenha(@PathVariable Long id, @RequestBody AlterarSenhaDto dados,
+    public Usuario alterarSenha(@PathVariable Long id, @RequestBody @Valid AlterarSenhaDto dados,
                                 @AuthenticationPrincipal Usuario usuarioLogado) {
         service.validarDono(id, usuarioLogado);
         return service.alterarSenha(id, dados);
