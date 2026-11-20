@@ -5,10 +5,10 @@ from io import BytesIO
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
 
-from regras import SLOTS_GRADE, normalizar, turma_pode_usar_slot
+from regras import SLOTS_GRADE, SLOTS_GRADE_MODULO, normalizar, turma_pode_usar_slot
 
 
-CORES_DISCIPLINA = {
+CORES_PROFESSOR = {
     "azul": "9DC3E6",
     "rosa": "F4B6C2",
     "amarelo": "FFD966",
@@ -68,7 +68,19 @@ def borda_simples():
     )
 
 
-def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores_disciplina):
+def cor_do_texto(fundo):
+    vermelho_fundo = int(fundo[0:2], 16)
+    verde_fundo = int(fundo[2:4], 16)
+    azul_fundo = int(fundo[4:6], 16)
+    luminancia = 0.299 * vermelho_fundo + 0.587 * verde_fundo + 0.114 * azul_fundo
+    return branco if luminancia < 140 else preto
+
+
+def sigla_da_disciplina(turma, disciplina, nome):
+    return turma["disciplinas"].get(disciplina, {}).get("sigla") or nome
+
+
+def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores_professor, slots_grade=SLOTS_GRADE):
     total_colunas = 2 + len(turmas)
     ultima_coluna = ws.cell(1, total_colunas).column_letter
 
@@ -104,8 +116,13 @@ def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores
         carga_total = 0
 
         for dados in turma["disciplinas"].values():
+            nome_disciplina = (
+                f"{dados['sigla']} - {dados['nome']}"
+                if dados.get("sigla")
+                else dados["nome"]
+            )
             lista_disciplinas.append(
-                f"{dados['nome']} ({dados['qtd']}x)"
+                f"{nome_disciplina} ({dados['qtd']}x)"
             )
             carga_total += dados["qtd"]
 
@@ -145,7 +162,8 @@ def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores
     ws.cell(legenda_linha, 1).value = "LEGENDA"
     ws.cell(legenda_linha, 1).font = Font(bold=True)
     ws.cell(legenda_linha, 2).value = (
-        "Aulas = professor + disciplina | "
+        "Aulas = sigla da disciplina + professor | "
+        "Cor = professor | "
         "COMP VAGO = sem aula | "
         "AJUSTE = fora do horário exato informado"
     )
@@ -163,20 +181,20 @@ def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores
         for indice, turma in enumerate(turmas, start=3)
     }
 
-    cor_disciplina = {}
+    cor_professor = {}
 
-    def obter_cor(disciplina, nome):
-        if cores_disciplina.get(disciplina):
-            return cores_disciplina[disciplina]
+    def obter_cor(professor_id, nome):
+        if cores_professor.get(str(professor_id)):
+            return cores_professor[str(professor_id)]
 
         chave = normalizar(nome)
 
-        if chave not in cor_disciplina:
-            cor_disciplina[chave] = paleta[
-                len(cor_disciplina) % len(paleta)
+        if chave not in cor_professor:
+            cor_professor[chave] = paleta[
+                len(cor_professor) % len(paleta)
             ]
 
-        return cor_disciplina[chave]
+        return cor_professor[chave]
 
     agenda = agendador.atribuicoes
     faltas = agendador.contar_faltas()
@@ -184,7 +202,7 @@ def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores
     for dia in agendador.dias:
         inicio_dia = linha
 
-        for horario, tipo, turno in SLOTS_GRADE:
+        for horario, tipo, turno in slots_grade:
             ws.cell(linha, 1).value = dia
             ws.cell(linha, 2).value = horario
 
@@ -256,37 +274,38 @@ def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores
 
                     elif registro["tipo"] == "normal":
                         texto = (
-                            f"{registro['professor']}\n"
-                            f"{registro['disciplina_nome']}"
+                            f"{sigla_da_disciplina(turma, registro['disciplina'], registro['disciplina_nome'])}\n"
+                            f"{registro['professor']}"
                         )
 
                         if registro.get("aula_dupla"):
                             texto += "\nAULA DUPLA"
 
+                        fundo = (
+                            laranja_ajuste
+                            if registro.get("ajuste")
+                            else obter_cor(
+                                registro["professor_id"],
+                                registro["professor"]
+                            )
+                        )
+
                         if registro.get("ajuste"):
                             texto += "\nAJUSTE"
-                            celula.fill = PatternFill(
-                                "solid",
-                                fgColor=laranja_ajuste
-                            )
-                        else:
-                            celula.fill = PatternFill(
-                                "solid",
-                                fgColor=obter_cor(
-                                    registro["disciplina"],
-                                    registro["disciplina_nome"]
-                                )
-                            )
 
+                        celula.fill = PatternFill(
+                            "solid",
+                            fgColor=fundo
+                        )
                         celula.value = texto
-                        celula.font = Font(bold=True, color=preto, size=9)
+                        celula.font = Font(bold=True, color=cor_do_texto(fundo), size=9)
 
                     else:
                         texto = (
-                            f"{registro['professor_a']} - "
-                            f"{registro['disciplina_a_nome']}\n"
-                            f"{registro['professor_b']} - "
-                            f"{registro['disciplina_b_nome']}\n"
+                            f"{sigla_da_disciplina(turma, registro['disciplina_a'], registro['disciplina_a_nome'])} - "
+                            f"{registro['professor_a']}\n"
+                            f"{sigla_da_disciplina(turma, registro['disciplina_b'], registro['disciplina_b_nome'])} - "
+                            f"{registro['professor_b']}\n"
                             "AULA DIVIDIDA"
                         )
 
@@ -343,8 +362,8 @@ def preencher_grade(ws, nome_escola, coordenacao, turmas, agendador, modo, cores
 
     existe_falta = any(
         quantidade > 0
-        for faltas_turma in faltas.values()
-        for quantidade in faltas_turma.values()
+        for turma in turmas
+        for quantidade in faltas.get(turma["chave"], {}).values()
     )
 
     if existe_falta:
@@ -482,19 +501,60 @@ def preencher_ajustes(ws, ajustes):
             ws.cell(linha, col).fill = PatternFill("solid", fgColor=laranja_ajuste)
 
 
-def gerar_planilha(nome_escola, coordenacao, turmas, resultado, cores_disciplina):
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Grade"
+def turma_do_modulo(turma):
+    return turma["turnos"] == ["Módulo"]
 
-    preencher_grade(
-        ws,
+
+def preencher_grades(wb, titulos, nome_escola, coordenacao, turmas, agendador, modo, cores_professor):
+    regulares = [turma for turma in turmas if not turma_do_modulo(turma)]
+    modulo = [turma for turma in turmas if turma_do_modulo(turma)]
+    grupos = [
+        (titulos[0], regulares, SLOTS_GRADE),
+        (titulos[1], modulo, SLOTS_GRADE_MODULO)
+    ]
+
+    for titulo, turmas_grupo, slots_grade in grupos:
+        if not turmas_grupo:
+            continue
+
+        if wb.active.title == "Sheet":
+            ws = wb.active
+            ws.title = titulo
+        else:
+            ws = wb.create_sheet(titulo)
+
+        preencher_grade(
+            ws,
+            nome_escola,
+            coordenacao,
+            turmas_grupo,
+            agendador,
+            modo,
+            cores_professor,
+            slots_grade
+        )
+
+
+def bloquear_formulas(wb):
+    for ws in wb.worksheets:
+        for linha in ws.iter_rows():
+            for celula in linha:
+                if celula.data_type == "f":
+                    celula.data_type = "s"
+
+
+def gerar_planilha(nome_escola, coordenacao, turmas, resultado, cores_professor):
+    wb = Workbook()
+
+    preencher_grades(
+        wb,
+        ("Grade", "Grade módulo noturno"),
         nome_escola,
         coordenacao,
         turmas,
         resultado["agendador"],
         "normal",
-        cores_disciplina
+        cores_professor
     )
 
     if resultado["erros"]:
@@ -503,16 +563,19 @@ def gerar_planilha(nome_escola, coordenacao, turmas, resultado, cores_disciplina
     sugestao = resultado["sugestao"]
 
     if sugestao:
-        preencher_grade(
-            wb.create_sheet("Solução sugerida"),
+        preencher_grades(
+            wb,
+            ("Solução sugerida", "Sugestão módulo noturno"),
             nome_escola,
             coordenacao,
             turmas,
             sugestao,
             "sugestao",
-            cores_disciplina
+            cores_professor
         )
         preencher_ajustes(wb.create_sheet("Ajustes da solução"), sugestao.listar_ajustes())
+
+    bloquear_formulas(wb)
 
     arquivo = BytesIO()
     wb.save(arquivo)
@@ -521,11 +584,14 @@ def gerar_planilha(nome_escola, coordenacao, turmas, resultado, cores_disciplina
     return arquivo
 
 
-def cor_da_disciplina(nome_cor):
-    if not nome_cor:
+def cor_do_professor(valor):
+    if not valor:
         return None
 
-    return CORES_DISCIPLINA.get(normalizar(nome_cor))
+    if re.fullmatch(r"#?[0-9A-Fa-f]{6}", valor.strip()):
+        return valor.strip().lstrip("#").upper()
+
+    return CORES_PROFESSOR.get(normalizar(valor))
 
 
 def nome_do_arquivo(nome_escola):

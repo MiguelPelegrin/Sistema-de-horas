@@ -5,7 +5,8 @@ public enum Turno { // manha, tarde, integral, noite
     MANHA("Manha"),
     TARDE("Tarde"),
     INTEGRAL("Integral"),
-    NOITE("Noite");
+    NOITE("Noite"),
+    MODULO("Modulo noturno");
 
     private final String descrição;
 

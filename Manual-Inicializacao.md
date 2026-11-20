@@ -26,9 +26,12 @@ cd "C:\Users\Aluno\Downloads\Sistema-de-horas\backend\cronosystem"
 
 $env:JAVA_HOME="C:\Program Files\Java\jdk-21"
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
+$env:JWT_SECRET="troque-por-uma-frase-grande-so-sua-com-32-ou-mais"
 
 .\mvnw.cmd spring-boot:run
 ```
+
+A variavel `JWT_SECRET` e a chave que assina o login. Use uma frase so sua com pelo menos 32 caracteres. Sem ela o sistema funciona, mas todos precisam entrar de novo sempre que o backend reiniciar.
 
 Mantenha esse terminal aberto. O backend ficara disponivel em:
 

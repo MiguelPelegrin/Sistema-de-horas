@@ -15,9 +15,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.format.DateTimeParseException;
@@ -52,6 +56,7 @@ public class TratadorDeErros {
             Map.entry("semestre", "Semestre"),
             Map.entry("diasLetivos", "Dias letivos"),
             Map.entry("cor", "Cor"),
+            Map.entry("sigla", "Sigla"),
             Map.entry("laboratorio", "Laboratório")
     );
 
@@ -97,9 +102,15 @@ public class TratadorDeErros {
     }
 
     @ExceptionHandler({IllegalArgumentException.class, DateTimeParseException.class, HttpMessageNotReadableException.class,
-            MethodArgumentTypeMismatchException.class})
+            MethodArgumentTypeMismatchException.class, MissingServletRequestPartException.class,
+            MissingServletRequestParameterException.class, MultipartException.class})
     public ResponseEntity<Map<String, String>> requisicaoInvalida(Exception erro) {
         return resposta(HttpStatus.BAD_REQUEST, "Dados enviados em formato inválido.");
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, String>> arquivoGrande(MaxUploadSizeExceededException erro) {
+        return resposta(HttpStatus.BAD_REQUEST, "A planilha pode ter no máximo 5 MB.");
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -118,6 +129,11 @@ public class TratadorDeErros {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, String>> naoAutenticado(AuthenticationException erro) {
         return resposta(HttpStatus.UNAUTHORIZED, "E-mail ou senha inválidos.");
+    }
+
+    @ExceptionHandler(MuitasTentativasException.class)
+    public ResponseEntity<Map<String, String>> muitasTentativas(MuitasTentativasException erro) {
+        return resposta(HttpStatus.TOO_MANY_REQUESTS, erro.getMessage());
     }
 
     @ExceptionHandler({AccessDeniedException.class, java.nio.file.AccessDeniedException.class})

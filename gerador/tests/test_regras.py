@@ -21,14 +21,18 @@ def professor(id, nome, disciplinas, disponibilidade, carga_maxima=None):
     }
 
 
-def turma(chave, turnos, disciplinas):
+def turma(chave, turnos, disciplinas, siglas=None):
     return {
         "id": chave,
         "nome": f"Turma {chave}",
         "chave": chave,
         "turnos": turnos,
         "disciplinas": {
-            disciplina: {"nome": disciplina.title(), "qtd": quantidade}
+            disciplina: {
+                "nome": disciplina.title(),
+                "sigla": (siglas or {}).get(disciplina),
+                "qtd": quantidade
+            }
             for disciplina, quantidade in disciplinas.items()
         }
     }
@@ -168,6 +172,56 @@ class TestRegras(unittest.TestCase):
 
         self.assertEqual(primeira, segunda)
 
+    def test_sabado_so_entra_quando_e_dia_letivo(self):
+        professores = [professor(1, "Ana", ["mat"], {"Sábado": regras.SLOTS_TURNO["Manhã"]})]
+        turmas = [turma("1", ["Manhã"], {"mat": 2})]
+
+        sem_sabado = regras.montar_grade(professores, turmas, [])["agendador"]
+        com_sabado = regras.montar_grade(professores, turmas, [], dias=regras.SEMANA)["agendador"]
+
+        self.assertEqual(sem_sabado.total_faltas(), 2)
+        self.assertEqual(com_sabado.total_faltas(), 0)
+        self.assertEqual({dia for dia, _ in com_sabado.atribuicoes["1"]}, {"Sábado"})
+
+    def test_modulo_noturno_usa_blocos_que_valem_duas_aulas(self):
+        professores = [professor(1, "Leandro", ["qge"], semana_toda("Módulo"), carga_maxima=4)]
+        turmas = [turma("1", ["Módulo"], {"qge": 3})]
+
+        resultado = regras.montar_grade(professores, turmas, [])
+        horarios = {horario for _, horario in resultado["agendador"].atribuicoes["1"]}
+
+        self.assertEqual(resultado["agendador"].total_faltas(), 1)
+        self.assertTrue(horarios <= set(regras.SLOTS_TURNO["Módulo"]))
+        self.assertEqual(resultado["erros"][0]["tipo"], "carga")
+
+    def test_professor_nao_fica_no_modulo_e_na_noite_ao_mesmo_tempo(self):
+        disponibilidade = {"Segunda-feira": ["19h00 - 19h50", "19h00 - 20h50"]}
+        professores = [professor(1, "Junior", ["apfq"], disponibilidade)]
+        turmas = [
+            turma("noite", ["Noite"], {"apfq": 1}),
+            turma("modulo", ["Módulo"], {"apfq": 1})
+        ]
+
+        agendador = regras.montar_grade(professores, turmas, [], dias=["Segunda-feira"])["agendador"]
+
+        self.assertEqual(agendador.total_faltas(), 1)
+        self.assertTrue(regras.slots_se_chocam("19h00 - 19h50", "19h00 - 20h50"))
+        self.assertFalse(regras.slots_se_chocam("18h10 - 19h00", "19h00 - 20h50"))
+
+    def test_professor_tem_no_maximo_8_aulas_por_dia(self):
+        professores = [professor(1, "Rejane", ["ingles"], {
+            "Segunda-feira": regras.SLOTS_TURNO["Manhã"] + regras.SLOTS_TURNO["Tarde"] + regras.SLOTS_TURNO["Noite"]
+        })]
+        turmas = [
+            turma("integral", ["Manhã", "Tarde"], {"ingles": 8}),
+            turma("noite", ["Noite"], {"ingles": 2})
+        ]
+
+        agendador = regras.montar_grade(professores, turmas, [], dias=["Segunda-feira"])["agendador"]
+
+        self.assertEqual(regras.carga_do_professor(agendador.agendas_professores[1], "Segunda-feira"), 8)
+        self.assertEqual(agendador.total_faltas(), 2)
+
 
 class TestPlanilha(unittest.TestCase):
 
@@ -191,6 +245,56 @@ class TestPlanilha(unittest.TestCase):
         planilha = load_workbook(BytesIO(gerar_planilha("ETEC", None, turmas, resultado, {}).getvalue()))
 
         self.assertEqual(planilha.sheetnames, ["Grade"])
+
+    def test_aula_mostra_sigla_e_usa_a_cor_do_professor(self):
+        professores = [professor(1, "Ana", ["mat"], semana_toda("Manhã"))]
+        turmas = [turma("1", ["Manhã"], {"mat": 1}, siglas={"mat": "MAT"})]
+        resultado = regras.montar_grade(professores, turmas, [])
+
+        planilha = load_workbook(BytesIO(gerar_planilha("ETEC", None, turmas, resultado, {"1": "1F4E79"}).getvalue()))
+        celulas = [
+            celula
+            for linha in planilha["Grade"].iter_rows()
+            for celula in linha
+            if celula.value == "MAT\nAna"
+        ]
+
+        self.assertEqual(len(celulas), 1)
+        self.assertEqual(celulas[0].fill.fgColor.rgb[-6:], "1F4E79")
+        self.assertEqual(celulas[0].font.color.rgb[-6:], "FFFFFF")
+
+    def test_modulo_noturno_ganha_aba_propria(self):
+        professores = [
+            professor(1, "Ana", ["mat"], semana_toda("Manhã")),
+            professor(2, "Sidney", ["pti"], semana_toda("Módulo"))
+        ]
+        turmas = [
+            turma("1", ["Manhã"], {"mat": 2}),
+            turma("2", ["Módulo"], {"pti": 2})
+        ]
+        resultado = regras.montar_grade(professores, turmas, [])
+
+        planilha = load_workbook(BytesIO(gerar_planilha("ETEC", None, turmas, resultado, {}).getvalue()))
+        horarios_modulo = [linha[1].value for linha in planilha["Grade módulo noturno"].iter_rows(min_row=7, max_row=9)]
+
+        self.assertEqual(planilha.sheetnames, ["Grade", "Grade módulo noturno"])
+        self.assertEqual(horarios_modulo, ["19h00 - 20h50", "20h50 - 21h05", "21h05 - 22h50"])
+
+    def test_texto_comecando_com_igual_nao_vira_formula(self):
+        professores = [professor(1, "=CMD|' /C calc'!A0", ["mat"], semana_toda("Manhã"))]
+        turmas = [turma("1", ["Manhã"], {"mat": 1}, siglas={"mat": "=1+1"})]
+        resultado = regras.montar_grade(professores, turmas, [])
+
+        planilha = load_workbook(BytesIO(gerar_planilha('=HYPERLINK("http://x.com")', "=2+2", turmas, resultado, {}).getvalue()))
+        formulas = [
+            celula.coordinate
+            for linha in planilha["Grade"].iter_rows()
+            for celula in linha
+            if celula.data_type == "f"
+        ]
+
+        self.assertEqual(formulas, [])
+        self.assertEqual(planilha["Grade"]["A1"].value, '=HYPERLINK("http://x.com")')
 
 
 if __name__ == "__main__":

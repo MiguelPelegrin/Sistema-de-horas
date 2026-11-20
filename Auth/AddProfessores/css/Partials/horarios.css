@@ -166,6 +166,109 @@
   color: #fff;
 }
 
+.bloco-disponibilidade {
+  touch-action: none;
+  user-select: none;
+}
+
+.abas-disponibilidade {
+  margin-bottom: 12px;
+}
+
+.abas-disponibilidade .nav-link {
+  font-weight: 700;
+  color: var(--cor-texto-secundario);
+}
+
+.abas-disponibilidade .nav-link.active {
+  color: #0d6efd;
+}
+
+.disponibilidade-atalhos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--cor-texto-secundario);
+}
+
+.cabecalho-disponibilidade {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 4px 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.cabecalho-disponibilidade:hover {
+  background: #dfe9f8;
+  color: #0d6efd;
+}
+
+.cabecalho-disponibilidade small {
+  font-weight: 600;
+  font-size: .68rem;
+  color: var(--cor-texto-secundario);
+}
+
+.tabela-disponibilidade.tabela-modulo {
+  min-width: 560px;
+}
+
+.tabela-modulo .bloco-disponibilidade {
+  min-height: 58px;
+}
+
+.texto-modulo {
+  margin-bottom: 10px;
+  color: var(--cor-texto-secundario);
+  font-size: .88rem;
+}
+
+.cores-professor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.opcao-cor {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px #cfd5dc;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.opcao-cor:hover {
+  transform: translateY(-1px);
+}
+
+.opcao-cor.ativa {
+  border-color: #fff;
+  box-shadow: 0 0 0 3px #0d6efd;
+}
+
+.opcao-cor-automatica {
+  width: auto;
+  padding: 0 10px;
+  background: #fff;
+  color: #374151;
+  font-size: .8rem;
+  font-weight: 800;
+}
+
 .mensagem-disponibilidade {
   min-height: 20px;
   margin-top: 10px;

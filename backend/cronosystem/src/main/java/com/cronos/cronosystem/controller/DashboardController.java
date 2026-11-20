@@ -1,6 +1,5 @@
 package com.cronos.cronosystem.controller;
 
-import com.cronos.cronosystem.repository.GradeRepository;
 import com.cronos.cronosystem.repository.MateriaRepository;
 import com.cronos.cronosystem.repository.ProfRepository;
 import com.cronos.cronosystem.repository.TurmaRepository;
@@ -26,9 +25,6 @@ public class DashboardController {
     private TurmaRepository turmaRepository;
 
     @Autowired
-    private GradeRepository gradeRepository;
-
-    @Autowired
     private EscolaService escolaService;
 
     @GetMapping("/estatisticas")
@@ -38,8 +34,7 @@ public class DashboardController {
         return Map.of(
                 "totalProfessores", profRepository.countByEscola_Id(escolaId),
                 "totalDisciplinas", materiaRepository.countByEscola_Id(escolaId),
-                "totalTurmas", turmaRepository.countByEscola_Id(escolaId),
-                "totalAulas", gradeRepository.countByEscola_Id(escolaId)
+                "totalTurmas", turmaRepository.countByEscola_Id(escolaId)
         );
     }
 }

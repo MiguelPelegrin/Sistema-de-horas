@@ -13,6 +13,7 @@ async function carregarDisciplinasCadastradas() {
     disciplinasCadastradas.forEach((disciplina) => {
       const opcao = document.createElement('option');
       opcao.value = disciplina.nome;
+      if (disciplina.sigla) opcao.label = disciplina.sigla;
       lista.appendChild(opcao);
     });
   } catch (error) {
@@ -30,21 +31,22 @@ window.adicionarTagDisciplina = function() {
   const texto = input.value.trim();
 
   if (texto === '') {
-    alert('Digite o nome da disciplina!');
+    mostrarAviso('Digite o nome da disciplina.', 'alerta');
     return;
   }
 
   const disciplina = disciplinasCadastradas.find(
     (item) => item.nome.toLowerCase() === texto.toLowerCase()
+      || (item.sigla && item.sigla.toLowerCase() === texto.toLowerCase())
   );
 
   if (!disciplina) {
-    alert('Disciplina não encontrada. Cadastre a disciplina antes de vincular ao professor.');
+    mostrarAviso('Disciplina não encontrada. Cadastre a disciplina antes de vincular ao professor.', 'alerta');
     return;
   }
 
   if (container.querySelector(`[data-id="${disciplina.id}"]`)) {
-    alert('Essa disciplina já foi adicionada.');
+    mostrarAviso('Essa disciplina já foi adicionada.', 'alerta');
     return;
   }
 

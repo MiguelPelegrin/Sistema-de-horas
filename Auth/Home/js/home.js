@@ -1,3 +1,4 @@
+const DIAS_SEMANA = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 const DIAS_PADRAO = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
 
 let escolaAtual = null;
@@ -20,7 +21,6 @@ function carregarEstatisticas() {
             document.getElementById('statProf').innerText = dados.totalProfessores || 0;
             document.getElementById('statDisc').innerText = dados.totalDisciplinas || 0;
             document.getElementById('statTurma').innerText = dados.totalTurmas || 0;
-            document.getElementById('statHor').innerText = dados.totalAulas || 0;
         })
         .catch(error => console.error('Erro na requisição das estatísticas:', error));
 }
@@ -64,7 +64,7 @@ function salvarEscola(mensagemSucesso) {
     const dadosEscola = montarDadosEscola();
 
     if (!dadosEscola.nome) {
-        alert('Informe o nome da escola.');
+        mostrarAviso('Informe o nome da escola.', 'alerta');
         return;
     }
 
@@ -77,14 +77,14 @@ function salvarEscola(mensagemSucesso) {
     })
         .then(async response => {
             if (response.ok) {
-                if (mensagemSucesso) alert(mensagemSucesso);
+                mostrarAviso(mensagemSucesso);
             } else {
-                alert(await lerMensagemErro(response, 'Erro ao salvar os dados.'));
+                mostrarAviso(await lerMensagemErro(response, 'Erro ao salvar os dados.'), 'erro');
             }
         })
         .catch(error => {
             console.error('Erro ao conectar com o servidor:', error);
-            alert('Não foi possível conectar ao servidor backend.');
+            mostrarAviso('Não foi possível conectar ao servidor backend.', 'erro');
         });
 }
 
@@ -113,18 +113,18 @@ function configurarDiasLetivos() {
             const dia = botao.dataset.day;
             if (diasSelecionados.includes(dia)) {
                 if (diasSelecionados.length === 1) {
-                    alert("Pelo menos um dia letivo precisa permanecer selecionado.");
+                    mostrarAviso("Pelo menos um dia letivo precisa permanecer selecionado.", "alerta");
                     return;
                 }
                 diasSelecionados = diasSelecionados.filter(item => item !== dia);
             } else {
                 diasSelecionados.push(dia);
-                diasSelecionados = DIAS_PADRAO.filter(item => diasSelecionados.includes(item));
+                diasSelecionados = DIAS_SEMANA.filter(item => diasSelecionados.includes(item));
             }
             atualizarDiasLetivos();
 
             if (escolaAtual) {
-                salvarEscola();
+                salvarEscola(`Dias letivos atualizados: ${diasSelecionados.join(', ')}.`);
             }
         });
     });

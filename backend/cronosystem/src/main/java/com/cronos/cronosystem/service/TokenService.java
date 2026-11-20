@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,27 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.secret}")
+    @Value("${api.security.token.secret:}")
     private String secret;
 
     @Value("${api.security.token.expiracao-horas}")
     private Long expiracaoHoras;
+
+    private Key chave;
+
+    @PostConstruct
+    public void carregarChave() {
+        if (secret == null || secret.isBlank()) {
+            chave = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+            return;
+        }
+
+        if (secret.getBytes(StandardCharsets.UTF_8).length < 32) {
+            throw new IllegalStateException("A variável JWT_SECRET precisa ter pelo menos 32 caracteres.");
+        }
+
+        chave = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     public String gerarToken(Usuario usuario) {
         return Jwts.builder()
@@ -29,14 +46,14 @@ public class TokenService {
                 .setSubject(usuario.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(Instant.now().plus(expiracaoHoras, ChronoUnit.HOURS)))
-                .signWith(chave(), SignatureAlgorithm.HS256)
+                .signWith(chave, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String getSubject(String token) {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(chave())
+                    .setSigningKey(chave)
                     .requireIssuer("cronosystem")
                     .build()
                     .parseClaimsJws(token)
@@ -45,9 +62,5 @@ public class TokenService {
         } catch (JwtException | IllegalArgumentException e) {
             return null;
         }
-    }
-
-    private Key chave() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 }

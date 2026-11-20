@@ -2,7 +2,7 @@ import re
 
 from flask import Flask, jsonify, request, send_file
 
-from backend import ErroBackend, buscar_dados_escola
+from backend import TIPO_XLSX, ErroBackend, buscar_dados_escola, salvar_no_historico
 from planilha import gerar_planilha, nome_do_arquivo
 from regras import montar_grade
 
@@ -21,7 +21,7 @@ def liberar_cors(resposta):
         resposta.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
         resposta.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
         resposta.headers["Access-Control-Expose-Headers"] = (
-            "Content-Disposition, X-Grade-Completa, X-Aulas-Pendentes, X-Solucao-Sugerida"
+            "Content-Disposition, X-Grade-Completa, X-Aulas-Pendentes, X-Solucao-Sugerida, X-Historico-Salvo"
         )
 
     return resposta
@@ -71,16 +71,20 @@ def gerar():
         dados["cores"]
     )
 
+    nome_arquivo = nome_do_arquivo(escola.get("nome") or "Escola")
+    historico_salvo = salvar_no_historico(token, arquivo.getvalue(), nome_arquivo, resultado)
+
     resposta = send_file(
         arquivo,
         as_attachment=True,
-        download_name=nome_do_arquivo(escola.get("nome") or "Escola"),
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        download_name=nome_arquivo,
+        mimetype=TIPO_XLSX
     )
 
     resposta.headers["X-Grade-Completa"] = "true" if resultado["completo"] else "false"
     resposta.headers["X-Aulas-Pendentes"] = str(resultado["agendador"].total_faltas())
     resposta.headers["X-Solucao-Sugerida"] = "true" if resultado["sugestao"] else "false"
+    resposta.headers["X-Historico-Salvo"] = "true" if historico_salvo else "false"
 
     return resposta
 

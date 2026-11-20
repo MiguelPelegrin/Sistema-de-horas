@@ -39,7 +39,7 @@
           <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 
-        <div class="conteudo-menu-lateral d-flex flex-column justify-content-between p-4">
+        <div class="offcanvas-body d-flex flex-column justify-content-between p-4">
           <ul class="navbar-nav gap-2">
             <li class="nav-item">
               <a class="nav-link active d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Public/Home.html">
@@ -66,17 +66,6 @@
                 <i class="bi bi-file-earmark-spreadsheet"></i> Planilhas
               </a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 rounded" href="#"
-                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-plus-circle"></i> Adicionar
-              </a>
-              <ul id="dropdown-menu-adicionar" class="dropdown-menu dropdown-menu-dark border-secondary border-opacity-25 shadow">
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddProfessores/html/addProfessores.html"><i class="bi bi-person-plus"></i> Professor</a></li>
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddTurma/html/AddTurmas.html"><i class="bi bi-people-fill"></i> Turma</a></li>
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addDisciplinas.html"><i class="bi bi-journal-plus"></i> Disciplina</a></li>
-              </ul>
-            </li>
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Suporte/html/suporte.html">
                 <i class="bi bi-headset"></i> Suporte
@@ -84,8 +73,8 @@
             </li>
           </ul>
 
-          <div id="container-botao-sair" class="pt-3 border-top border-secondary border-opacity-25">
-            <a class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2 py-2" href="#" onclick="sair()">
+          <div id="exit-event" class="pt-3 border-top border-secondary border-opacity-25">
+            <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2" href="#" onclick="sair()">
               <i class="bi bi-box-arrow-left"></i> Sair
             </a>
           </div>
@@ -114,26 +103,16 @@
         </div>
 
         <div class="campo-formulario-custom">
+          <label for="input-sigla-disciplina">Sigla</label>
+          <input id="input-sigla-disciplina" class="form-control text-uppercase" maxlength="20" placeholder="Ex: MAT" />
+          <small class="text-muted">É a sigla que aparece na planilha. A cor da aula vem do professor.</small>
+        </div>
+
+        <div class="campo-formulario-custom">
           <label for="select-tem-prioridade">Prioridade (Ex: laboratório)</label>
           <select id="select-tem-prioridade" class="form-select">
             <option value="Sim">Sim</option>
             <option value="Não">Não</option>
-          </select>
-        </div>
-
-        <div class="campo-formulario-custom">
-          <label for="select-cor-identificacao">Cor de Identificação</label>
-          <select id="select-cor-identificacao" class="form-select">
-            <option>Azul</option>
-            <option>Rosa</option>
-            <option>Amarelo</option>
-            <option>Verde</option>
-            <option>Vermelho</option>
-            <option>Roxo</option>
-            <option>Laranja</option>
-            <option>Cinza</option>
-            <option>Ciano</option>
-            <option>Marrom</option>
           </select>
         </div>
 
@@ -179,21 +158,45 @@
     selectTemPrioridade.addEventListener("change", atualizarEstadoPrioridade);
     atualizarEstadoPrioridade();
 
+    const inputNome = document.getElementById("input-nome-disciplina");
+    const inputSigla = document.getElementById("input-sigla-disciplina");
+    let siglaEditada = false;
+
+    function sugerirSigla(nome) {
+      const palavras = nome
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .toUpperCase()
+        .split(/\s+/)
+        .filter((palavra) => palavra.length > 2);
+
+      if (!palavras.length) return "";
+      if (palavras.length === 1) return palavras[0].slice(0, 3);
+      return palavras.map((palavra) => palavra[0]).join("").slice(0, 6);
+    }
+
+    inputNome.addEventListener("input", () => {
+      if (!siglaEditada) inputSigla.value = sugerirSigla(inputNome.value);
+    });
+
+    inputSigla.addEventListener("input", () => {
+      siglaEditada = inputSigla.value.trim() !== "";
+    });
+
     let salvandoDisciplina = false;
 
     async function adicionarDisciplina() {
-      const inputNome = document.getElementById("input-nome-disciplina");
       const botao = document.getElementById("btn-salvar-disciplina");
       const disciplina = inputNome.value.trim();
+      const sigla = inputSigla.value.trim().toUpperCase();
 
       if (salvandoDisciplina) return;
 
       if (!disciplina) {
-        alert("Por favor, digite o nome da disciplina!");
+        mostrarAviso("Digite o nome da disciplina.", "alerta");
         return;
       }
 
-      const cor = document.getElementById("select-cor-identificacao").value;
       const laboratorio = selectTemPrioridade.value === "Sim" ? selectQualPrioridade.value : null;
 
       salvandoDisciplina = true;
@@ -203,21 +206,24 @@
         const response = await apiFetch("/materia", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nome: disciplina, cor, laboratorio })
+          body: JSON.stringify({ nome: disciplina, sigla: sigla || null, laboratorio })
         });
 
         if (!response.ok) {
-          alert(await lerMensagemErro(response, "Não foi possível salvar a disciplina no backend."));
+          mostrarAviso(await lerMensagemErro(response, "Não foi possível salvar a disciplina no backend."), "erro");
           return;
         }
 
-        alert("Disciplina cadastrada com sucesso!");
+        mostrarAviso(`Disciplina ${disciplina} cadastrada com sucesso!`);
         inputNome.value = "";
+        inputSigla.value = "";
+        siglaEditada = false;
         selectTemPrioridade.value = "Sim";
         atualizarEstadoPrioridade();
+        inputNome.focus();
       } catch (error) {
         console.error(error);
-        alert("Não foi possível salvar a disciplina no backend.");
+        mostrarAviso("Não foi possível salvar a disciplina no backend.", "erro");
       } finally {
         salvandoDisciplina = false;
         botao.disabled = false;

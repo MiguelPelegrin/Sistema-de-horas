@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -24,9 +25,12 @@ public class Prof {
     private String nome;
 
     @PositiveOrZero
-    @Max(65)
+    @Max(value = 44, message = "deve ser no máximo 44 aulas por semana (jornada semanal máxima da CLT)")
     @Column(name = "carga_horaria_maxima")
     private Integer chm; // Carga Horaria Maxima
+
+    @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "escolha uma cor válida")
+    private String cor;
 
     @JsonIgnore
     @ManyToOne

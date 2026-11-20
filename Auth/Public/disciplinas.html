@@ -19,6 +19,7 @@
     .item-cadastro { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 18px; border:1px solid #e7ebf0; border-radius:12px; background:#fff; margin-bottom:12px; }
     .item-cadastro:last-child { margin-bottom:0; }
     .item-titulo { font-weight:700; color:#1f2937; }
+    .item-detalhes { color:#6b7280; font-size:.93rem; margin-top:4px; }
     .estado-vazio { padding:30px 15px; text-align:center; color:#6c757d; }
     @media (max-width:700px) { .conteudo-lista{padding:100px 16px 28px;} .cabecalho-lista{flex-direction:column;} .cabecalho-lista .btn{width:100%;} .item-cadastro{align-items:flex-start;flex-direction:column;} .item-cadastro .btn{width:100%;} }
   </style>
@@ -37,7 +38,7 @@
             <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Turmas.html"><i class="bi bi-people"></i> Turmas</a></li>
             <li class="nav-item"><a class="nav-link active d-flex align-items-center gap-2 px-3 py-2 rounded" href="./disciplinas.html"><i class="bi bi-book"></i> Disciplinas</a></li>
             <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="./Planilhas.html"><i class="bi bi-file-earmark-spreadsheet"></i> Planilhas</a></li>
-            <li class="nav-item dropdown"><a class="nav-link dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 rounded" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-plus-circle"></i> Adicionar</a><ul class="dropdown-menu dropdown-menu-dark shadow"><li><a class="dropdown-item" href="../AddProfessores/html/addProfessores.html">Professor</a></li><li><a class="dropdown-item" href="../AddTurma/html/AddTurmas.html">Turma</a></li><li><a class="dropdown-item" href="../AddDisciplinas/html/addDisciplinas.html">Disciplina</a></li></ul></li><li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../Suporte/html/suporte.html"><i class="bi bi-headset"></i> Suporte</a></li>
+            <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../Suporte/html/suporte.html"><i class="bi bi-headset"></i> Suporte</a></li>
           </ul>
           <a class="btn btn-outline-danger w-100" href="#" onclick="sair()"><i class="bi bi-box-arrow-left me-1"></i> Sair</a>
         </div>
@@ -46,7 +47,13 @@
   </nav>
   <main class="conteudo-lista">
     <div class="cabecalho-lista"><div><h1>Disciplinas cadastradas</h1><p>Consulte as disciplinas registradas no sistema.</p></div><a class="btn btn-primary" href="../AddDisciplinas/html/addDisciplinas.html"><i class="bi bi-journal-plus me-1"></i> Cadastrar disciplina</a></div>
-    <section class="card-lista"><div id="lista-disciplinas" class="estado-vazio">Carregando disciplinas...</div></section>
+    <section class="card-lista">
+      <div class="barra-pesquisa">
+        <i class="bi bi-search"></i>
+        <input id="pesquisa-disciplinas" type="search" placeholder="Pesquisar pelo nome ou sigla da disciplina..." aria-label="Pesquisar disciplinas">
+      </div>
+      <div id="lista-disciplinas" class="estado-vazio">Carregando disciplinas...</div>
+    </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="./js/disciplinas.js"></script>

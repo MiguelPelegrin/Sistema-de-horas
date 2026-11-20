@@ -13,13 +13,17 @@ SEMANA = [
     "Terça-feira",
     "Quarta-feira",
     "Quinta-feira",
-    "Sexta-feira"
+    "Sexta-feira",
+    "Sábado"
 ]
+
+DIAS_UTEIS = SEMANA[:5]
 
 TURNOS = {
     1: "Manhã",
     2: "Tarde",
-    3: "Noite"
+    3: "Noite",
+    4: "Módulo"
 }
 
 SLOTS_TURNO = {
@@ -41,6 +45,10 @@ SLOTS_TURNO = {
         "19h50 - 20h40",
         "21h05 - 21h55",
         "21h55 - 22h45"
+    ],
+    "Módulo": [
+        "19h00 - 20h50",
+        "21h05 - 22h50"
     ]
 }
 
@@ -48,14 +56,23 @@ SLOTS_INTERVALO = {
     "09h50 - 10h05",
     "12h35 - 13h30",
     "15h10 - 18h10",
-    "20h40 - 21h05"
+    "20h40 - 21h05",
+    "20h50 - 21h05"
 }
 
 TODOS_SLOTS = (
     SLOTS_TURNO["Manhã"]
     + SLOTS_TURNO["Tarde"]
     + SLOTS_TURNO["Noite"]
+    + SLOTS_TURNO["Módulo"]
 )
+
+AULAS_POR_SLOT = {
+    "19h00 - 20h50": 2,
+    "21h05 - 22h50": 2
+}
+
+LIMITE_AULAS_DIA = 8
 
 SLOTS_GRADE = [
     ("07h20 - 08h10", "aula", "Manhã"),
@@ -77,7 +94,13 @@ SLOTS_GRADE = [
     ("21h55 - 22h45", "aula", "Noite")
 ]
 
-ORDEM_GRADE = [horario for horario, _, _ in SLOTS_GRADE]
+SLOTS_GRADE_MODULO = [
+    ("19h00 - 20h50", "aula", "Módulo"),
+    ("20h50 - 21h05", "intervalo", "Módulo"),
+    ("21h05 - 22h50", "aula", "Módulo")
+]
+
+ORDEM_GRADE = [horario for horario, _, _ in SLOTS_GRADE + SLOTS_GRADE_MODULO]
 
 INTERSTICIO = 11 * 60
 
@@ -125,10 +148,35 @@ def slot_adjacente(slot_a, slot_b):
     if slot_a not in TODOS_SLOTS or slot_b not in TODOS_SLOTS:
         return False
 
+    if turno_do_slot(slot_a) != turno_do_slot(slot_b):
+        return False
+
     a = ORDEM_GRADE.index(slot_a)
     b = ORDEM_GRADE.index(slot_b)
 
     return abs(a - b) == 1
+
+
+def aulas_do_slot(horario):
+    return AULAS_POR_SLOT.get(horario, 1)
+
+
+def slots_se_chocam(slot_a, slot_b):
+    return (
+        slot_a != slot_b
+        and inicio_minutos(slot_a) < fim_minutos(slot_b)
+        and inicio_minutos(slot_b) < fim_minutos(slot_a)
+    )
+
+
+CONFLITOS = {
+    horario: [
+        outro_horario
+        for outro_horario in TODOS_SLOTS
+        if slots_se_chocam(horario, outro_horario)
+    ]
+    for horario in TODOS_SLOTS
+}
 
 
 VIZINHOS = {
@@ -202,20 +250,46 @@ def professor_respeita_intersticio(professor_id, dia, horario, agendas):
     return True
 
 
-def professor_respeita_carga(professor, agendas):
+def carga_do_professor(agenda, dia=None):
+    return sum(
+        aulas_do_slot(slot_ag)
+        for (dia_ag, slot_ag) in agenda
+        if dia is None or dia_ag == dia
+    )
+
+
+def professor_respeita_carga(professor, dia, horario, agendas):
+    agenda = agendas[professor["id"]]
+    aulas = aulas_do_slot(horario)
+    total = 0
+    no_dia = 0
+
+    for (dia_ag, slot_ag) in agenda:
+        peso = aulas_do_slot(slot_ag)
+        total += peso
+
+        if dia_ag == dia:
+            no_dia += peso
+
+    if no_dia + aulas > LIMITE_AULAS_DIA:
+        return False
+
     carga_maxima = professor.get("carga_maxima")
 
-    if not carga_maxima:
-        return True
+    return not carga_maxima or total + aulas <= carga_maxima
 
-    return len(agendas[professor["id"]]) < carga_maxima
+
+def professor_sem_choque(professor_id, dia, horario, agendas):
+    agenda = agendas[professor_id]
+    return not any((dia, outro) in agenda for outro in CONFLITOS[horario])
 
 
 def professor_livre(professor, dia, horario, agendas):
     chave = (dia, horario)
     return (
         chave not in agendas[professor["id"]]
-        and professor_respeita_carga(professor, agendas)
+        and professor_sem_choque(professor["id"], dia, horario, agendas)
+        and professor_respeita_carga(professor, dia, horario, agendas)
         and professor_respeita_intersticio(
             professor["id"],
             dia,
@@ -244,7 +318,7 @@ class Agendador:
         self.turmas = turmas
         self.divisoes = divisoes
         self.ajuste = ajuste
-        self.dias = [dia for dia in SEMANA if not dias or dia in dias]
+        self.dias = [dia for dia in SEMANA if dia in (dias or DIAS_UTEIS)]
 
         self.agendas_professores = {
             professor["id"]: {}
@@ -866,7 +940,7 @@ class Agendador:
                         "disciplina": disciplina
                     })
 
-        ajustes.sort(key=lambda item: (SEMANA.index(item["dia"]), ORDEM_GRADE.index(item["horario"])))
+        ajustes.sort(key=lambda item: (SEMANA.index(item["dia"]), inicio_minutos(item["horario"])))
         return ajustes
 
     def marcar_aulas_duplas(self):
@@ -944,7 +1018,8 @@ def diagnosticar_faltas(professores, turmas, agendador):
                 solucao = "Aumente a disponibilidade do professor ou diminua as aulas por semana."
             elif all(
                 professor.get("carga_maxima")
-                and len(agendador.agendas_professores[professor["id"]]) >= professor["carga_maxima"]
+                and carga_do_professor(agendador.agendas_professores[professor["id"]])
+                + aulas_do_slot(horarios_turma[0][1]) > professor["carga_maxima"]
                 for professor in aptos
             ):
                 tipo = "carga"
@@ -957,7 +1032,8 @@ def diagnosticar_faltas(professores, turmas, agendador):
             else:
                 tipo = "conflito"
                 motivo = (
-                    "Os horários livres dos professores já foram usados por outras turmas "
+                    "Os horários livres dos professores já foram usados por outras turmas, "
+                    f"passariam de {LIMITE_AULAS_DIA} aulas no mesmo dia "
                     "ou quebrariam o interstício de 11 horas entre um dia e outro."
                 )
                 solucao = "Libere mais horários para o professor ou use a grade de solução sugerida."

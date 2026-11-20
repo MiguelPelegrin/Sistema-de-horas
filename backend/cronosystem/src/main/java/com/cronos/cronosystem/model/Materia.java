@@ -22,7 +22,7 @@ public class Materia {
     private String nome;
 
     @Size(max = 20)
-    private String cor;
+    private String sigla;
 
     @Size(max = 100)
     private String laboratorio;

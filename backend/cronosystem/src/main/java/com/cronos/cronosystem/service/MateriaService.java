@@ -42,6 +42,11 @@ public class MateriaService {
     public Materia salvar(Materia x) {
         Long escolaId = escolaService.escolaLogadaId();
 
+        if (x.getSigla() != null) {
+            String sigla = x.getSigla().trim().toUpperCase();
+            x.setSigla(sigla.isEmpty() ? null : sigla);
+        }
+
         boolean nomeRepetido = x.getId() == null
                 ? repository.existsByNomeIgnoreCaseAndEscola_Id(x.getNome(), escolaId)
                 : repository.existsByNomeIgnoreCaseAndEscola_IdAndIdNot(x.getNome(), escolaId, x.getId());

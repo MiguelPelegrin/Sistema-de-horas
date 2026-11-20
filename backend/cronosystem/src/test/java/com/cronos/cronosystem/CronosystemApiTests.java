@@ -3,12 +3,16 @@ package com.cronos.cronosystem;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import com.jayway.jsonpath.JsonPath;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.Filter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,9 +20,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Date;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -122,6 +128,43 @@ class CronosystemApiTests {
     }
 
     @Test
+    void loginBloqueiaDepoisDeCincoSenhasErradas() throws Exception {
+        String email = "bloqueio-" + UUID.randomUUID() + "@teste.com";
+
+        mvc.perform(post("/admin/escola")
+                        .header("Authorization", "Bearer " + tokenAdmin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nomeEscola\":\"ETEC Teste\",\"nome\":\"Secretaria\",\"email\":\"" + email + "\",\"senha\":\"senha123\"}"))
+                .andExpect(status().isOk());
+
+        for (int i = 0; i < 5; i++) {
+            mvc.perform(post("/auth/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"email\":\"" + email + "\",\"senha\":\"errada" + i + "\"}"))
+                    .andExpect(status().isUnauthorized());
+        }
+
+        mvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\",\"senha\":\"senha123\"}"))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(jsonPath("$.mensagem", startsWith("Muitas tentativas")));
+    }
+
+    @Test
+    void tokenAssinadoComOutraChaveRetorna401() throws Exception {
+        String tokenFalso = Jwts.builder()
+                .setIssuer("cronosystem")
+                .setSubject("admin@teste.com")
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS256))
+                .compact();
+
+        mvc.perform(get("/admin/escola").header("Authorization", "Bearer " + tokenFalso))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void escolaNaoAcessaAreaDoAdministrador() throws Exception {
         String escola = criarEscola();
 
@@ -159,8 +202,20 @@ class CronosystemApiTests {
     void disciplinaRepetidaRetorna409() throws Exception {
         String escola = criarEscola();
 
-        criarId(escola, "/materia", "{\"nome\":\"Matemática\"}");
-        enviar(escola, "POST", "/materia", "{\"nome\":\"MATEMÁTICA\"}").andExpect(status().isConflict());
+        criarId(escola, "/materia", "{\"nome\":\"Programação Web\"}");
+        enviar(escola, "POST", "/materia", "{\"nome\":\"PROGRAMAÇÃO WEB\"}").andExpect(status().isConflict());
+    }
+
+    @Test
+    void escolaNovaJaVemComMateriasBasicas() throws Exception {
+        String escola = criarEscola();
+
+        enviar(escola, "GET", "/materia", null)
+                .andExpect(jsonPath("$.length()").value(12))
+                .andExpect(jsonPath("$[?(@.nome == 'Matemática')].sigla").value("MAT"))
+                .andExpect(jsonPath("$[?(@.nome == 'Língua Portuguesa')].sigla").value("PORT"));
+
+        enviar(escola, "POST", "/materia", "{\"nome\":\"matemática\"}").andExpect(status().isConflict());
     }
 
     @Test
@@ -224,5 +279,89 @@ class CronosystemApiTests {
 
         String resposta = enviar(escola, "GET", "/usuario/me", null).andReturn().getResponse().getContentAsString();
         assertFalse(resposta.contains("senha"));
+    }
+
+    @Test
+    void cargaHorariaRespeitaLimiteDaJornadaSemanal() throws Exception {
+        String escola = criarEscola();
+
+        criarId(escola, "/prof", "{\"nome\":\"Andreia\",\"chm\":44,\"cor\":\"#7B1FA2\"}");
+
+        enviar(escola, "POST", "/prof", "{\"nome\":\"Andreia\",\"chm\":45}")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensagem").value(startsWith("Carga horária máxima")));
+
+        enviar(escola, "POST", "/prof", "{\"nome\":\"Andreia\",\"chm\":20,\"cor\":\"roxo\"}")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensagem").value(startsWith("Cor")));
+    }
+
+    @Test
+    void disciplinaGuardaSiglaEmMaiusculo() throws Exception {
+        String escola = criarEscola();
+
+        long materia = criarId(escola, "/materia", "{\"nome\":\"Química Geral\",\"sigla\":\" qge \"}");
+
+        enviar(escola, "GET", "/materia/" + materia, null).andExpect(jsonPath("$.sigla").value("QGE"));
+    }
+
+    @Test
+    void escolaAceitaSabadoEModuloNoturno() throws Exception {
+        String escola = criarEscola();
+
+        enviar(escola, "PUT", "/escola", "{\"nome\":\"ETEC Teste\",\"diasLetivos\":\"Segunda,Sábado\"}")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.diasLetivos").value("Segunda,Sábado"));
+
+        criarId(escola, "/turma", "{\"nome\":\"1 QUI\",\"turno\":\"MODULO\"}");
+
+        enviar(escola, "POST", "/disp-prof/professor/" + criarId(escola, "/prof", "{\"nome\":\"Junior\",\"chm\":10}"),
+                "[{\"dia\":\"SAB\",\"horaInicio\":\"19:00\",\"horaFim\":\"20:50\"}]")
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void historicoDePlanilhasFicaSoNaEscolaQueGerou() throws Exception {
+        String escolaA = criarEscola();
+        String escolaB = criarEscola();
+        byte[] conteudo = {'P', 'K', 3, 4, 1, 2, 3};
+
+        String resposta = mvc.perform(multipart("/planilha")
+                        .file(new MockMultipartFile("arquivo", "Grade_ETEC.xlsx", "application/octet-stream", conteudo))
+                        .param("completa", "false")
+                        .param("aulasPendentes", "3")
+                        .param("solucaoSugerida", "true")
+                        .header("Authorization", "Bearer " + escolaA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nomeArquivo").value("Grade_ETEC.xlsx"))
+                .andExpect(jsonPath("$.aulasPendentes").value(3))
+                .andReturn().getResponse().getContentAsString();
+
+        long id = ((Number) JsonPath.read(resposta, "$.id")).longValue();
+
+        enviar(escolaA, "GET", "/planilha", null).andExpect(jsonPath("$.length()").value(1));
+        enviar(escolaB, "GET", "/planilha", null).andExpect(jsonPath("$.length()").value(0));
+        enviar(escolaB, "GET", "/planilha/" + id + "/arquivo", null).andExpect(status().isNotFound());
+
+        byte[] baixado = enviar(escolaA, "GET", "/planilha/" + id + "/arquivo", null)
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsByteArray();
+        assertArrayEquals(conteudo, baixado);
+
+        enviar(escolaA, "DELETE", "/planilha/" + id, null).andExpect(status().isOk());
+        enviar(escolaA, "GET", "/planilha", null).andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void historicoRecusaArquivoQueNaoEPlanilha() throws Exception {
+        String escola = criarEscola();
+
+        mvc.perform(multipart("/planilha")
+                        .file(new MockMultipartFile("arquivo", "virus.exe", "application/octet-stream", new byte[]{'M', 'Z', 0, 0}))
+                        .header("Authorization", "Bearer " + escola))
+                .andExpect(status().isBadRequest());
+
+        mvc.perform(multipart("/planilha").header("Authorization", "Bearer " + escola))
+                .andExpect(status().isBadRequest());
     }
 }

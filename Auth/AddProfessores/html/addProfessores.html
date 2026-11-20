@@ -65,20 +65,6 @@
                 <i class="bi bi-file-earmark-spreadsheet"></i> Planilhas
               </a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 rounded" href="#"
-                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-plus-circle"></i> Adicionar
-              </a>
-              <ul id="navbar-add" class="dropdown-menu dropdown-menu-dark border-secondary border-opacity-25 shadow">
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="./addProfessores.html"><i
-                      class="bi bi-person-plus"></i> Professor</a></li>
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddTurma/html/AddTurmas.html"><i
-                      class="bi bi-people-fill"></i> Turma</a></li>
-                <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="../../AddDisciplinas/html/addDisciplinas.html"><i
-                      class="bi bi-journal-plus"></i> Disciplina</a></li>
-              </ul>
-            </li>
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded" href="../../Suporte/html/suporte.html">
                 <i class="bi bi-headset"></i> Suporte
@@ -126,8 +112,9 @@
       </div>
 
       <div class="col-md-6">
-        <label for="input-carga-horaria" class="form-label">Carga horária máxima</label>
-        <input id="input-carga-horaria" class="form-control" type="number" min="0" max="65" required placeholder="Ex: 20" />
+        <label for="input-carga-horaria" class="form-label">Carga horária máxima (aulas por semana)</label>
+        <input id="input-carga-horaria" class="form-control" type="number" min="0" max="44" required placeholder="Ex: 20" />
+        <div class="form-text">Máximo de 44 aulas por semana, a jornada semanal máxima da CLT (art. 318).</div>
       </div>
 
       <div class="col-md-6">
@@ -149,13 +136,19 @@
           <span class="text-secondary small id-mensagem-vazia">Nenhuma disciplina adicionada ainda.</span>
         </div>
       </div>
+
+      <div class="col-12 mt-3">
+        <label class="form-label d-block">Cor do professor na planilha</label>
+        <div id="container-cores-professor" class="cores-professor" role="group" aria-label="Cor do professor na planilha"></div>
+        <div class="form-text">As aulas desse professor aparecem com essa cor na grade gerada.</div>
+      </div>
     </div>
 
     <section class="disponibilidade-professor mt-4" aria-labelledby="titulo-disponibilidade">
       <div class="disponibilidade-cabecalho">
         <div>
           <h3 id="titulo-disponibilidade" class="mb-1">Disponibilidade do professor</h3>
-          <p class="text-muted mb-0">Clique nos blocos em que o professor pode ministrar aulas.</p>
+          <p class="text-muted mb-0">Clique e arraste sobre os blocos para marcar vários horários de uma vez. Clique no nome do dia ou no horário para marcar a coluna ou a linha inteira.</p>
         </div>
         <div class="disponibilidade-acoes">
           <span id="contador-disponibilidade" class="disponibilidade-contador">0 horários selecionados</span>
@@ -165,26 +158,54 @@
         </div>
       </div>
 
-      <div class="disponibilidade-legenda" aria-label="Legenda da tabela">
-        <span><span class="legenda-bloco legenda-disponivel"></span> Disponível</span>
-        <span><span class="legenda-bloco legenda-selecionado"></span> Selecionado</span>
-        <span><i class="bi bi-info-circle me-1"></i> Máximo de 8 aulas por dia</span>
+      <ul class="nav nav-tabs abas-disponibilidade" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="aba-aulas" data-bs-toggle="tab" data-bs-target="#painel-aulas" type="button"
+            role="tab" aria-controls="painel-aulas" aria-selected="true">
+            <i class="bi bi-grid-3x3-gap me-1"></i> Aula a aula
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="aba-modulo" data-bs-toggle="tab" data-bs-target="#painel-modulo" type="button"
+            role="tab" aria-controls="painel-modulo" aria-selected="false">
+            <i class="bi bi-moon-stars me-1"></i> Módulo noturno (blocos)
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="painel-aulas" role="tabpanel" aria-labelledby="aba-aulas" tabindex="0">
+          <div class="disponibilidade-atalhos">
+            <span>Marcar rápido:</span>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-grade="aulas" data-turno="Manhã">Manhã</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-grade="aulas" data-turno="Tarde">Tarde</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-grade="aulas" data-turno="Noite">Noite</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-grade="aulas" data-turno="todos">Semana toda</button>
+          </div>
+          <div class="tabela-disponibilidade-wrap">
+            <table class="tabela-disponibilidade" id="tabela-aulas"></table>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="painel-modulo" role="tabpanel" aria-labelledby="aba-modulo" tabindex="0">
+          <p class="texto-modulo">
+            Para turmas do módulo noturno: cada bloco tem duas aulas seguidas (19h00 às 20h50 e 21h05 às 22h50).
+            Marque os blocos em que o professor pode dar aula.
+          </p>
+          <div class="disponibilidade-atalhos">
+            <span>Marcar rápido:</span>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-grade="modulo" data-turno="todos">Todos os blocos</button>
+          </div>
+          <div class="tabela-disponibilidade-wrap">
+            <table class="tabela-disponibilidade tabela-modulo" id="tabela-modulo"></table>
+          </div>
+        </div>
       </div>
 
-      <div class="tabela-disponibilidade-wrap">
-        <table class="tabela-disponibilidade">
-          <thead>
-            <tr>
-              <th scope="col" class="coluna-horario">Horário</th>
-              <th scope="col">Segunda</th>
-              <th scope="col">Terça</th>
-              <th scope="col">Quarta</th>
-              <th scope="col">Quinta</th>
-              <th scope="col">Sexta</th>
-            </tr>
-          </thead>
-          <tbody id="corpo-tabela-disponibilidade"></tbody>
-        </table>
+      <div class="disponibilidade-legenda mt-2" aria-label="Legenda da tabela">
+        <span><span class="legenda-bloco legenda-disponivel"></span> Disponível</span>
+        <span><span class="legenda-bloco legenda-selecionado"></span> Selecionado</span>
+        <span><i class="bi bi-info-circle me-1"></i> Cada bloco do módulo vale 2 aulas. A grade usa no máximo 8 aulas por dia do professor.</span>
       </div>
 
       <input type="hidden" id="input-disponibilidade-professor" name="disponibilidade-professor" value="[]">

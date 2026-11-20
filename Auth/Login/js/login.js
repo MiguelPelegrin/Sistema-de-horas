@@ -38,6 +38,12 @@ async function entrar(evento) {
       return;
     }
 
+    if (response.status === 429) {
+      const erro = await response.json().catch(() => ({}));
+      mensagem.textContent = erro.mensagem || "Muitas tentativas de login. Aguarde alguns minutos.";
+      return;
+    }
+
     if (!response.ok) throw new Error(`Erro ${response.status}`);
 
     const dados = await response.json();

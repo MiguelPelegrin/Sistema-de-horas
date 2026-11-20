@@ -14,19 +14,19 @@ window.adicionarTurma = async function() {
   const divisoes = window.obterDivisoesTurma?.() || [];
 
   if (!anoSelecionado) {
-    alert("Por favor, selecione o ano.");
+    mostrarAviso("Selecione o ano da turma.", "alerta");
     return;
   }
   if (!curso) {
-    alert("Por favor, digite o nome do curso.");
+    mostrarAviso("Digite o nome do curso.", "alerta");
     return;
   }
   if (!turnoSelecionado) {
-    alert("Por favor, selecione o turno.");
+    mostrarAviso("Selecione o turno da turma.", "alerta");
     return;
   }
   if (!disciplinas.length) {
-    alert("Adicione pelo menos uma disciplina à turma.");
+    mostrarAviso("Adicione pelo menos uma disciplina à turma.", "alerta");
     return;
   }
 
@@ -38,7 +38,8 @@ window.adicionarTurma = async function() {
     Matutino: "MANHA",
     Vespertino: "TARDE",
     Noturno: "NOITE",
-    Integral: "INTEGRAL"
+    Integral: "INTEGRAL",
+    Modulo: "MODULO"
   }[turnoSelecionado];
 
   try {
@@ -87,14 +88,15 @@ window.adicionarTurma = async function() {
       }
     }
 
-    alert("Turma cadastrada com sucesso!");
+    mostrarAviso(`Turma ${turmaSalva.nome} cadastrada com sucesso!`);
     selectAno.selectedIndex = 0;
     selectTurno.selectedIndex = 0;
+    selectTurno.dispatchEvent(new Event("change"));
     inputCurso.value = "";
     window.limparDisciplinasTurma?.();
   } catch (error) {
     console.error(error);
-    alert(error.message || "Não foi possível salvar a turma no backend.");
+    mostrarAviso(error.message || "Não foi possível salvar a turma no backend.", "erro");
   } finally {
     salvandoTurma = false;
     if (botao) botao.disabled = false;

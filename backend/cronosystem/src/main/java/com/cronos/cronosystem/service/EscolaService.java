@@ -4,8 +4,10 @@ import com.cronos.cronosystem.dto.EscolaCadastroDto;
 import com.cronos.cronosystem.dto.EscolaResumoDto;
 import com.cronos.cronosystem.exception.RegraNegocioException;
 import com.cronos.cronosystem.model.Escola;
+import com.cronos.cronosystem.model.Materia;
 import com.cronos.cronosystem.model.Usuario;
 import com.cronos.cronosystem.repository.EscolaRepository;
+import com.cronos.cronosystem.repository.MateriaRepository;
 import com.cronos.cronosystem.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EscolaService {
@@ -26,6 +29,9 @@ public class EscolaService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private MateriaRepository materiaRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -58,7 +64,22 @@ public class EscolaService {
         return repository.findById(escolaLogadaId()).orElseThrow();
     }
 
-    private static final List<String> DIAS_LETIVOS = List.of("Segunda", "Terça", "Quarta", "Quinta", "Sexta");
+    private static final List<String> DIAS_LETIVOS = List.of("Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado");
+
+    private static final Map<String, String> MATERIAS_BASICAS = Map.ofEntries(
+            Map.entry("Língua Portuguesa", "PORT"),
+            Map.entry("Matemática", "MAT"),
+            Map.entry("Língua Inglesa", "ING"),
+            Map.entry("Educação Física", "EF"),
+            Map.entry("Arte", "ARTE"),
+            Map.entry("História", "HIST"),
+            Map.entry("Geografia", "GEO"),
+            Map.entry("Filosofia", "FIL"),
+            Map.entry("Sociologia", "SOC"),
+            Map.entry("Física", "FIS"),
+            Map.entry("Química", "QUI"),
+            Map.entry("Biologia", "BIO")
+    );
 
     private void validarDiasLetivos(String diasLetivos) {
         if (diasLetivos == null || diasLetivos.isBlank()) {
@@ -95,6 +116,7 @@ public class EscolaService {
         escola.setCoordenacao(dados.coordenacao());
         escola.setDiasLetivos("Segunda,Terça,Quarta,Quinta,Sexta");
         escola = repository.save(escola);
+        cadastrarMateriasBasicas(escola);
 
         Usuario usuario = new Usuario();
         usuario.setNome(dados.nome());
@@ -105,6 +127,16 @@ public class EscolaService {
         usuarioRepository.save(usuario);
 
         return new EscolaResumoDto(escola.getId(), escola.getNome(), escola.getCoordenacao(), usuario.getNome(), usuario.getEmail());
+    }
+
+    private void cadastrarMateriasBasicas(Escola escola) {
+        MATERIAS_BASICAS.forEach((nome, sigla) -> {
+            Materia materia = new Materia();
+            materia.setNome(nome);
+            materia.setSigla(sigla);
+            materia.setEscola(escola);
+            materiaRepository.save(materia);
+        });
     }
 
     public List<EscolaResumoDto> listar() {

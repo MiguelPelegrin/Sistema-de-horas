@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6ab95a4-5fc5-4b63-831e-4435e76eb3c8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/cronosystem/src/main/java/com/cronos/cronosystem/cors/CorsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/AddDisciplinas/html/addDisciplinas.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/AddDisciplinas/html/addDisciplinas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/AddProfessores/html/addProfessores.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/AddProfessores/html/addProfessores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/AddTurma/html/AddTurmas.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/AddTurma/html/AddTurmas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Public/Home.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Public/Home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Public/Planilhas.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Public/Planilhas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Public/Turmas.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Public/Turmas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Public/disciplinas.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Public/disciplinas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Public/professores.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Public/professores.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Suporte/html/suporte.html" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Suporte/html/suporte.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,9 +24,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="3IoaEDrxYrstG4ht1B0YB1UcwMF" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -29,7 +40,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/3ano/Cronos/Sistema-de-horas/backend/cronosystem/pom.xml"
+    "last_opened_file_path": "D:/3ano/Cronos/Sistema-de-horas"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

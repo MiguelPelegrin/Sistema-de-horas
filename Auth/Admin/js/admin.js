@@ -50,12 +50,12 @@ async function cadastrarEscola(evento) {
   const senha = document.getElementById("input-senha-usuario").value;
 
   if (!nomeEscola || !nome || !email || !senha) {
-    alert("Preencha o nome da escola, o responsável, o e-mail e a senha.");
+    mostrarAviso("Preencha o nome da escola, o responsável, o e-mail e a senha.", "alerta");
     return;
   }
 
   if (senha.length < 6) {
-    alert("A senha precisa ter pelo menos 6 caracteres.");
+    mostrarAviso("A senha precisa ter pelo menos 6 caracteres.", "alerta");
     return;
   }
 
@@ -71,16 +71,16 @@ async function cadastrarEscola(evento) {
     });
 
     if (!response.ok) {
-      alert(await lerMensagemErro(response, "Não foi possível cadastrar a escola."));
+      mostrarAviso(await lerMensagemErro(response, "Não foi possível cadastrar a escola."), "erro");
       return;
     }
 
-    alert("Escola cadastrada com sucesso!");
+    mostrarAviso(`Escola ${nomeEscola} cadastrada com sucesso!`);
     document.getElementById("form-escola").reset();
     await carregarEscolas();
   } catch (error) {
     console.error(error);
-    alert("Não foi possível conectar ao servidor.");
+    mostrarAviso("Não foi possível conectar ao servidor.", "erro");
   } finally {
     salvandoEscola = false;
     botao.disabled = false;

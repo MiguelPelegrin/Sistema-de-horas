@@ -2,8 +2,8 @@ import os
 
 import requests
 
-from planilha import cor_da_disciplina
-from regras import SEMANA, TODOS_SLOTS
+from planilha import cor_do_professor
+from regras import DIAS_UTEIS, TODOS_SLOTS
 
 
 API_BACKEND = os.environ.get("CRONOS_BACKEND", "http://localhost:8080")
@@ -13,7 +13,8 @@ DIAS_BACKEND = {
     "TER": "Terça-feira",
     "QUA": "Quarta-feira",
     "QUI": "Quinta-feira",
-    "SEX": "Sexta-feira"
+    "SEX": "Sexta-feira",
+    "SAB": "Sábado"
 }
 
 DIAS_ESCOLA = {
@@ -21,15 +22,19 @@ DIAS_ESCOLA = {
     "Terça": "Terça-feira",
     "Quarta": "Quarta-feira",
     "Quinta": "Quinta-feira",
-    "Sexta": "Sexta-feira"
+    "Sexta": "Sexta-feira",
+    "Sábado": "Sábado"
 }
 
 TURNOS_TURMA = {
     "MANHA": ["Manhã"],
     "TARDE": ["Tarde"],
     "NOITE": ["Noite"],
-    "INTEGRAL": ["Manhã", "Tarde"]
+    "INTEGRAL": ["Manhã", "Tarde"],
+    "MODULO": ["Módulo"]
 }
+
+TIPO_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
 class ErroBackend(Exception):
@@ -62,6 +67,25 @@ def buscar(caminho, token):
     return resposta.json()
 
 
+def salvar_no_historico(token, conteudo, nome_arquivo, resultado):
+    try:
+        resposta = requests.post(
+            f"{API_BACKEND}/planilha",
+            headers={"Authorization": f"Bearer {token}"},
+            files={"arquivo": (nome_arquivo, conteudo, TIPO_XLSX)},
+            data={
+                "completa": "true" if resultado["completo"] else "false",
+                "aulasPendentes": str(resultado["agendador"].total_faltas()),
+                "solucaoSugerida": "true" if resultado["sugestao"] else "false"
+            },
+            timeout=15
+        )
+    except requests.RequestException:
+        return False
+
+    return resposta.ok
+
+
 def formatar_horario(hora_inicio, hora_fim):
     inicio = hora_inicio[:5].replace(":", "h")
     fim = hora_fim[:5].replace(":", "h")
@@ -70,7 +94,6 @@ def formatar_horario(hora_inicio, hora_fim):
 
 def buscar_dados_escola(token):
     escola = buscar("/escola", token)
-    materias = buscar("/materia", token)
     lista_professores = buscar("/prof", token)
     materias_professores = buscar("/materia-prof", token)
     disponibilidades = buscar("/disp-prof", token)
@@ -125,6 +148,7 @@ def buscar_dados_escola(token):
         if turma:
             turma["disciplinas"][str(item["materia"]["id"])] = {
                 "nome": item["materia"]["nome"],
+                "sigla": item["materia"].get("sigla"),
                 "qtd": item["qtdAulas"]
             }
 
@@ -141,11 +165,11 @@ def buscar_dados_escola(token):
         DIAS_ESCOLA[dia]
         for dia in (escola.get("diasLetivos") or "").split(",")
         if dia in DIAS_ESCOLA
-    ] or SEMANA
+    ] or DIAS_UTEIS
 
     cores = {
-        str(materia["id"]): cor_da_disciplina(materia.get("cor"))
-        for materia in materias
+        str(professor["id"]): cor_do_professor(professor.get("cor"))
+        for professor in lista_professores
     }
 
     return {

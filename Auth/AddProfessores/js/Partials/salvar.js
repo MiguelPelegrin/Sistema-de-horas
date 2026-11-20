@@ -1,3 +1,5 @@
+const LIMITE_CARGA_HORARIA = 44;
+
 let salvandoProfessor = false;
 
 window.salvarDadosProfessor = async function() {
@@ -9,19 +11,19 @@ window.salvarDadosProfessor = async function() {
   if (salvandoProfessor) return;
 
   if (!nome || !sobrenome) {
-    alert("Preencha o nome e o sobrenome do professor.");
+    mostrarAviso("Preencha o nome e o sobrenome do professor.", "alerta");
     return;
   }
 
   if (`${nome} ${sobrenome}`.length > 255) {
-    alert("O nome completo do professor pode ter no máximo 255 caracteres.");
+    mostrarAviso("O nome completo do professor pode ter no máximo 255 caracteres.", "alerta");
     return;
   }
 
   const carga = Number(cargaHoraria);
 
-  if (cargaHoraria === "" || !Number.isInteger(carga) || carga < 0 || carga > 65) {
-    alert("Informe uma carga horária máxima entre 0 e 65 aulas por semana.");
+  if (cargaHoraria === "" || !Number.isInteger(carga) || carga < 0 || carga > LIMITE_CARGA_HORARIA) {
+    mostrarAviso(`Informe uma carga horária máxima entre 0 e ${LIMITE_CARGA_HORARIA} aulas por semana (limite da jornada semanal da CLT).`, "alerta");
     return;
   }
 
@@ -36,7 +38,8 @@ window.salvarDadosProfessor = async function() {
       },
       body: JSON.stringify({
         nome: `${nome} ${sobrenome}`,
-        chm: carga
+        chm: carga,
+        cor: window.obterCorProfessor?.() || null
       })
     });
 
@@ -79,9 +82,12 @@ window.salvarDadosProfessor = async function() {
       }
     }
 
-    alert(disponibilidade.length > 0
-      ? "Professor e disponibilidade salvos com sucesso!"
-      : "Professor salvo com sucesso! Nenhum horário foi selecionado.");
+    if (disponibilidade.length > 0) {
+      mostrarAviso(`Professor ${nome} ${sobrenome} e disponibilidade salvos com sucesso!`);
+    } else {
+      mostrarAviso(`Professor ${nome} ${sobrenome} salvo, mas nenhum horário foi marcado na disponibilidade.`, "alerta");
+    }
+
     document.getElementById("input-nome-professor").value = "";
     document.getElementById("input-sobrenome-professor").value = "";
     document.getElementById("input-carga-horaria").value = "";
@@ -89,9 +95,10 @@ window.salvarDadosProfessor = async function() {
     document.getElementById("input-sigla-disciplina").value = "";
     document.getElementById("container-tags-disciplinas").innerHTML = '<span class="text-secondary small id-mensagem-vazia">Nenhuma disciplina adicionada ainda.</span>';
     window.limparDisponibilidadeProfessor?.();
+    window.limparCorProfessor?.();
   } catch (error) {
     console.error(error);
-    alert(error.message || "Não foi possível salvar o professor no backend.");
+    mostrarAviso(error.message || "Não foi possível salvar o professor no backend.", "erro");
   } finally {
     salvandoProfessor = false;
     if (botao) botao.disabled = false;

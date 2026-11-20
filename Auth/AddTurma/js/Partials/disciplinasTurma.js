@@ -16,7 +16,7 @@ async function carregarDisciplinasCadastradas() {
       : "Nenhuma disciplina cadastrada", true));
 
     disciplinasCadastradas.forEach((disciplina) => {
-      select.appendChild(criarOpcao(disciplina.id, disciplina.nome));
+      select.appendChild(criarOpcao(disciplina.id, nomeDisciplina(disciplina.id)));
     });
   } catch (error) {
     console.error(error);
@@ -34,7 +34,26 @@ function criarOpcao(valor, texto, desabilitada = false) {
 }
 
 function nomeDisciplina(id) {
-  return disciplinasCadastradas.find((disciplina) => disciplina.id === id)?.nome || "";
+  const disciplina = disciplinasCadastradas.find((item) => item.id === id);
+  if (!disciplina) return "";
+  return disciplina.sigla ? `${disciplina.sigla} - ${disciplina.nome}` : disciplina.nome;
+}
+
+function turmaDoModulo() {
+  return document.getElementById("select-turno")?.value === "Modulo";
+}
+
+function unidadeAulas(quantidade) {
+  if (turmaDoModulo()) return quantidade === 1 ? "bloco" : "blocos";
+  return quantidade === 1 ? "aula" : "aulas";
+}
+
+function atualizarUnidadeAulas() {
+  const label = document.getElementById("label-qtd-aulas");
+  if (label) {
+    label.textContent = turmaDoModulo() ? "Blocos por semana (cada bloco = 2 aulas)" : "Aulas por semana";
+  }
+  atualizarListas();
 }
 
 window.adicionarDisciplinaTurma = function() {
@@ -44,17 +63,17 @@ window.adicionarDisciplinaTurma = function() {
   const qtdAulas = Number(inputQtd.value);
 
   if (!materiaId) {
-    alert("Selecione a disciplina.");
+    mostrarAviso("Selecione a disciplina.", "alerta");
     return;
   }
 
   if (!Number.isInteger(qtdAulas) || qtdAulas < 1 || qtdAulas > 40) {
-    alert("Informe quantas aulas por semana (número inteiro de 1 a 40).");
+    mostrarAviso(`Informe quantas ${unidadeAulas(2)} por semana (número inteiro de 1 a 40).`, "alerta");
     return;
   }
 
   if (disciplinasTurma.some((item) => item.materiaId === materiaId)) {
-    alert("Essa disciplina já foi adicionada à turma.");
+    mostrarAviso("Essa disciplina já foi adicionada à turma.", "alerta");
     return;
   }
 
@@ -69,12 +88,12 @@ window.adicionarDivisaoTurma = function() {
   const materiaB = Number(document.getElementById("select-divisao-b").value);
 
   if (!materiaA || !materiaB) {
-    alert("Adicione as disciplinas da turma e escolha as duas disciplinas da divisão.");
+    mostrarAviso("Adicione as disciplinas da turma e escolha as duas disciplinas da divisão.", "alerta");
     return;
   }
 
   if (materiaA === materiaB) {
-    alert("Escolha duas disciplinas diferentes.");
+    mostrarAviso("Escolha duas disciplinas diferentes.", "alerta");
     return;
   }
 
@@ -84,7 +103,7 @@ window.adicionarDivisaoTurma = function() {
   );
 
   if (repetida) {
-    alert("Essa divisão já foi adicionada.");
+    mostrarAviso("Essa divisão já foi adicionada.", "alerta");
     return;
   }
 
@@ -128,7 +147,7 @@ function atualizarListas() {
   }
   disciplinasTurma.forEach((item) => {
     listaDisciplinas.appendChild(criarEtiqueta(
-      `${nomeDisciplina(item.materiaId)} · ${item.qtdAulas} aula${item.qtdAulas === 1 ? "" : "s"}/semana`,
+      `${nomeDisciplina(item.materiaId)} · ${item.qtdAulas} ${unidadeAulas(item.qtdAulas)}/semana`,
       () => removerDisciplinaTurma(item.materiaId),
       "bg-primary"
     ));
@@ -172,4 +191,5 @@ window.limparDisciplinasTurma = function() {
 document.addEventListener("DOMContentLoaded", () => {
   carregarDisciplinasCadastradas();
   atualizarListas();
+  document.getElementById("select-turno")?.addEventListener("change", atualizarUnidadeAulas);
 });
